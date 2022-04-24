@@ -1,2 +1,2 @@
 # litterkitten
-Discord bot and pest control
+Server mascot and pest control system
