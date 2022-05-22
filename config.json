@@ -1,0 +1,7 @@
+{
+  "clientId": "your client ID",
+  "guildId": "your test server",
+  "prefix": "pls",
+  "token": "your secret token",
+  "wednesday": "playlist link for Wednesday command"
+}
