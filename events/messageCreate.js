@@ -9,7 +9,7 @@ module.exports = (client, int) => {
   // Ignore bots (including self)
   if (int.author.bot) return
 
-  // Parse and check for prefix
+  // Parse arguments and check for prefix
   const args = int.content.split(' ')
   if (args.shift() !== client.config.prefix) return
 
@@ -24,5 +24,7 @@ module.exports = (client, int) => {
 
   // Trigger command directly
   int.args = args
+  int.silent = false
+  int.user = int.author
   command.run(client, int)
 }

@@ -1,55 +1,60 @@
+const sounds = require('../kitten-sounds.js')
 const { MessageEmbed } = require('discord.js')
+
 module.exports = (client, int) => {
+  // Verify server
   if (!int.guild) return
 
+  // Handle slash commands
   if (int.isCommand()) {
+    // Verify command
     const cmd = client.commands.get(int.commandName)
-
     if (!cmd) {
       return int.reply({
-        content: `Command "${int.commandName}" not found.`,
+        content: `"${int.commandName}" ${sounds.confused()}`,
         ephemeral: true
       })
     }
 
+    // Verify user is in same voice channel as bot
     if (cmd.voiceChannel) {
-      if (!int.member.voice.channel) {
+      if (!int.member.voice.channel || (
+        int.guild.me.voice.channel &&
+        int.member.voice.channel.id !== int.guild.me.voice.channel.id
+      )) {
         return int.reply({
-          content: 'You are not connected to an audio channel.',
-          ephemeral: true
-        })
-      }
-      if (int.guild.me.voice.channel &&
-        int.member.voice.channel.id !== int.guild.me.voice.channel.id) {
-        return int.reply({
-          content: 'You are not on the same audio channel as me.',
+          content: `${sounds.confused()} :question::microphone::question:`,
           ephemeral: true
         })
       }
     }
 
+    // Turn options into args for compatibility with message commands
     int.args = []
     int.options.data.forEach((option) => {
       int.args.push(option.value)
     })
+    int.silent = false
 
+    // Do command
     cmd.run(client, int)
   }
 
+  // Handle buttons
   if (int.isButton()) {
     const queue = client.player.getQueue(int.guildId)
     switch (int.customId) {
       case 'saveTrack': {
         if (!queue || !queue.playing) {
           return int.reply({
-            content: 'No music currently playing.',
+            content: `${sounds.confused()} :question::speaker::question:`,
             ephemeral: true,
             components: []
           })
         } else {
           const embed = new MessageEmbed()
             .setColor('BLUE')
-            .setTitle(client.user.username + ' - Save Track')
+            .setTitle('Saved track')
             .setThumbnail(client.user.displayAvatarURL())
             .addField('Track', `\`${queue.current.title}\``)
             .addField('Duration', `\`${queue.current.duration}\``)
@@ -59,12 +64,12 @@ module.exports = (client, int) => {
             .setTimestamp()
           int.member.send({ embeds: [embed] }).then(() => {
             return int.reply({
-              content: 'I sent you the name of the song in a private message',
+              content: `${sounds.yes()} :white_check_mark:`,
               ephemeral: true
             }).catch(e => { })
           }).catch(e => {
             return int.reply({
-              content: 'I can\'t send you a private message.',
+              content: `${sounds.confused()} :x::incoming_envelope::x:`,
               ephemeral: true
             }).catch(e => { })
           })
@@ -74,7 +79,7 @@ module.exports = (client, int) => {
       case 'time': {
         if (!queue || !queue.playing) {
           return int.reply({
-            content: 'No music currently playing.',
+            content: `${sounds.no()} :x::zero::musical_note:`,
             ephemeral: true,
             components: []
           })
@@ -84,7 +89,7 @@ module.exports = (client, int) => {
 
           if (timestamp.progress === 'Infinity') {
             return int.message.edit({
-              content: 'This song is live streaming. 🎧'
+              content: ':infinity:'
             }).catch(e => { })
           }
 
@@ -95,10 +100,6 @@ module.exports = (client, int) => {
             .setTimestamp()
             .setDescription(`${progress} (**${timestamp.progress}**%)`)
           int.message.edit({ embeds: [embed] }).catch(e => { })
-          int.reply({
-            content: '**✅ Success:** Time data updated. ',
-            ephemeral: true
-          }).catch(e => { })
         }
       }
     }

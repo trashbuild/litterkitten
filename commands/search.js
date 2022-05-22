@@ -1,79 +1,112 @@
+const sounds = require('../kitten-sounds.js')
 const { MessageEmbed } = require('discord.js')
 const { QueryType } = require('discord-player')
 
 module.exports = {
-  description: 'Used for your music search.',
+  description: 'Find music.',
   name: 'search',
   options: [{
     name: 'name',
-    description: 'Type the name of the music you want to play.',
+    description: 'Search terms.',
     type: 'STRING',
     required: true
   }],
   voiceChannel: true,
 
   run: async (client, interaction) => {
-    if (interaction.args.length < 1) return interaction.reply({ content: 'Please enter a valid song name. ❌', ephemeral: true }).catch(e => { })
+    // Get search terms
+    if (interaction.args.length < 1) {
+      return interaction.reply({
+        content: 'Please enter a valid song name. ❌',
+        ephemeral: true
+      }).catch(e => { })
+    }
     const name = interaction.args[0]
 
+    // Search
     const res = await client.player.search(name, {
       requestedBy: interaction.member,
       searchEngine: QueryType.AUTO
     })
-    if (!res || !res.tracks.length) return interaction.reply({ content: 'No search results found. ❌', ephemeral: true }).catch(e => { })
 
+    // Return if no results
+    if (!res || !res.tracks.length) {
+      return interaction.reply({
+        content: 'No search results found.',
+        ephemeral: true
+      }).catch(e => { })
+    }
+
+    // Get queue
     const queue = await client.player.createQueue(interaction.guild, {
       leaveOnEnd: true,
       autoSelfDeaf: true,
       metadata: interaction.channel
     })
 
-    const embed = new MessageEmbed()
-
-    embed.setColor('BLUE')
-    embed.setTitle(`Searched Music: ${name}`)
-
+    // Create embed
     const maxTracks = res.tracks.slice(0, 10)
+    const embed = new MessageEmbed()
+      .setColor('BLUE')
+      .setTitle(`Searched Music: ${name}`)
+      .setDescription(
+        `${maxTracks.map((track, i) => `**${i + 1}**. ${track.title} | \`${track.author}\``).join('\n')}\n\nChoose a song from **1** to **${maxTracks.length}** write send or write **cancel** and cancel selection.⬇️`
+      ).setTimestamp()
 
-    embed.setDescription(`${maxTracks.map((track, i) => `**${i + 1}**. ${track.title} | \`${track.author}\``).join('\n')}\n\nChoose a song from **1** to **${maxTracks.length}** write send or write **cancel** and cancel selection.⬇️`)
-
-    embed.setTimestamp()
-    embed.setFooter({ text: 'by Umut Bayraktar ❤️', iconURL: interaction.user.displayAvatarURL({ dynamic: true }) })
-
+    // Reply
     interaction.reply({ embeds: [embed] }).catch(e => { })
 
+    // Handle responses
     const collector = interaction.channel.createMessageCollector({
       time: 15000,
       errors: ['time'],
       filter: m => m.author.id === interaction.user.id
     })
-
     collector.on('collect', async (query) => {
       if (query.content.toLowerCase() === 'cancel') {
-        interaction.reply({ content: 'Call cancelled. ✅', ephemeral: true }).catch(e => { })
+        interaction.reply({
+          content: 'Call cancelled. ✅',
+          ephemeral: true
+        }).catch(e => { })
         collector.stop()
       }
+
       const value = parseInt(query.content)
-
-      if (!value || value <= 0 || value > maxTracks.length) return interaction.reply({ content: `Error: select a song **1** to **${maxTracks.length}** and write send or type **cancel** and cancel selection. ❌`, ephemeral: true }).catch(e => { })
-
-      collector.stop()
-
-      try {
-        if (!queue.connection) await queue.connect(interaction.member.voice.channel)
-      } catch {
-        await client.player.deleteQueue(interaction.guild.id)
-        return interaction.reply({ content: 'I can\'t join audio channel. ❌', ephemeral: true }).catch(e => { })
+      if (!value || value <= 0 || value > maxTracks.length) {
+        return interaction.reply({
+          content: `Select **1** to **${maxTracks.length}** and write **send** or type **cancel**.`,
+          ephemeral: true
+        }).catch(e => { })
       }
 
-      await interaction.reply({ content: 'Loading your music call. 🎧' }).catch(e => { })
+      collector.stop()
+      try {
+        if (!queue.connection) {
+          await queue.connect(interaction.member.voice.channel)
+        }
+      } catch {
+        await client.player.deleteQueue(interaction.guild.id)
+        return interaction.reply({
+          content: `${sounds.confused()} :question: :microphone: :question:`,
+          ephemeral: true
+        }).catch(e => { })
+      }
+
+      await interaction.reply({
+        content: 'Loading...'
+      }).catch(e => { })
 
       queue.addTrack(res.tracks[Number(query.content) - 1])
       if (!queue.playing) await queue.play()
     })
 
     collector.on('end', (msg, reason) => {
-      if (reason === 'time') return interaction.reply({ content: 'Song search time expired ❌', ephemeral: true }).catch(e => { })
+      if (reason === 'time') {
+        return interaction.reply({
+          content: 'Search time expired',
+          ephemeral: true
+        }).catch(e => { })
+      }
     })
   }
 }

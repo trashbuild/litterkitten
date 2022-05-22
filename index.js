@@ -65,29 +65,35 @@ fs.readdir('./events', (_err, files) => {
 // Build the music player
 client.player = new Player(client, {
   voiceConfig: {
-    leaveOnEnd: true, // If this variable is "true", the bot will leave the channel the music ends.
-    autoSelfDeaf: true // IF YOU WANT TO DEAF THE BOT, set false to true.
+    leaveOnEnd: true,
+    autoSelfDeaf: true
   },
-  maxVol: 100, // You can specify the maximum volume level.
+  maxVol: 100,
   loopMessage: false,
   discordPlayer: {
     ytdlOptions: {
-      quality: 'highestaudio', // Please don't touch
-      highWaterMark: 1 << 25 // Please don't touch
+      quality: 'highestaudio',
+      highWaterMark: 1 << 25
     }
   }
 })
 client.player.on('trackStart', (queue, track) => {
-  queue.metadata.send({ content: `🎵 Music started playing: **${track.title}** -> Channel: **${queue.connection.channel.name}** 🎧` }).catch(e => { })
+  queue.metadata.send({
+    content: `**${track.title}** :musical_note: :white_check_mark:`
+  }).catch(e => { })
 })
 
 client.player.on('trackAdd', (queue, track) => {
-  queue.metadata.send({ content: `**${track.title}** added to playlist. ✅` }).catch(e => { })
+  queue.metadata.send({
+    content: `**${track.title}** :white_check_mark:`
+  }).catch(e => { })
 })
 
-client.player.on('channelEmpty', (queue) => {
-  queue.metadata.send({ content: 'I left the audio channel because there is no one on my audio channel. ❌' }).catch(e => { })
-})
+// client.player.on('channelEmpty', (queue) => {
+//   queue.metadata.send({
+//     content: ''
+//   }).catch(e => { })
+// })
 
 client.player.on('queueEnd', (queue) => {
   if (queue.connection) queue.connection.disconnect()

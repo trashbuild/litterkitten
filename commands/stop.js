@@ -1,16 +1,28 @@
+const sounds = require('../kitten-sounds.js')
+
 module.exports = {
-  description: 'Music stops playing.',
+  description: 'Can\'t, won\'t.',
   name: 'stop',
   options: [],
   voiceChannel: true,
 
   run: async (client, interaction) => {
+    // Get queue
     const queue = client.player.getQueue(interaction.guild.id)
+    if (!queue || !queue.playing) {
+      return interaction.reply({
+        content: `${sounds.confused()} :question: :musical_note: :question:`,
+        ephemeral: true
+      }).catch(e => { })
+    }
 
-    if (!queue || !queue.playing) return interaction.reply({ content: 'There is no music currently playing!. ❌', ephemeral: true }).catch(e => { })
-
+    // Destroy the queue
     queue.destroy()
 
-    interaction.reply({ content: 'The music playing on this server has been turned off, see you next time ✅' }).catch(e => { })
+    // Reply
+    interaction.reply({
+      content: `${sounds.yes()} :white_check_mark:`,
+      ephemeral: true
+    }).catch(e => { })
   }
 }

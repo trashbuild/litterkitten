@@ -1,22 +1,21 @@
 const sounds = require('../kitten-sounds.js')
 
-const maxVol = 100
-
 module.exports = {
   description: 'Adjust the music volume.',
   name: 'volume',
   options: [{
     name: 'volume',
-    description: `Volume, from 0 to ${maxVol}.`,
+    description: 'Volume, from 0 to 100.',
     type: 'INTEGER',
     required: true
   }],
   voiceChannel: true,
   run: async (client, interaction) => {
+    // Get queue
     const queue = client.player.getQueue(interaction.guild.id)
-    if (!queue || !queue.playing || interaction.args.length < 1) {
+    if (!queue || !queue.playing) {
       return interaction.reply({
-        content: sounds.angy(),
+        content: `${sounds.confused()} :question: :musical_note: :question:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -36,7 +35,7 @@ module.exports = {
       }).catch(e => { })
     }
 
-    if (vol < 0 || vol > maxVol) {
+    if (vol < 0 || vol > 100) {
       return interaction.reply({
         content: sounds.confused(),
         ephemeral: true
@@ -44,8 +43,11 @@ module.exports = {
     }
 
     const success = queue.setVolume(vol)
+
+    // Reply (or don't)
+    if (interaction.silent) return
     return interaction.reply({
-      content: success ? `Volume changed: **%${vol}**/**${maxVol}** 🔊` : 'Something went wrong. ❌'
+      content: success ? `${sounds.yes()} 🔊 **%${vol}**` : sounds.confused()
     }).catch(e => { })
   }
 }

@@ -1,3 +1,5 @@
+const sounds = require('../kitten-sounds.js')
+
 module.exports = {
   description: 'For when it is Wednesday.',
   name: 'wednesday',
@@ -7,8 +9,17 @@ module.exports = {
     interaction.args = [
       'https://www.youtube.com/watch?v=9Y6uWBIPZVU&list=PLp3lk5Yt8dYZamVFnDcM1OIdHZSvHo8EP'
     ]
-    client.commands.get('play').run(client, interaction).then(
-      setTimeout(client.commands.get('shuffle').run, 1000, client, interaction)
-    )
+    client.commands.get('play').run(client, interaction)
+      .then(setTimeout(() => {
+        interaction.silent = true
+        client.commands.get('shuffle').run(client, interaction)
+        interaction.args = [20]
+        client.commands.get('volume').run(client, interaction)
+      }, 5000)
+      )
+    return interaction.reply({
+      content: `${sounds.yes()} :video_game: :musical_note: :bangbang:`,
+      ephemeral: true
+    }).catch(e => { })
   }
 }
