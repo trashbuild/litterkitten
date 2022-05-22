@@ -24,22 +24,18 @@ client.commands = new Collection()
 // Register slash commands from "commands" directory
 const synchronizeSlashCommands = require('discord-sync-commands-v14')
 fs.readdir('./commands/', (_err, files) => {
-  // Load all commands
+  // Load command
   files.forEach((file) => {
-    // Skip files that don't end with .js
     if (!file.endsWith('.js')) return
-    // Load properties of the command
     const props = require(`./commands/${file}`)
-    // Drop ".js"
     const commandName = file.split('.')[0]
-    // Set command
     client.commands.set(commandName, {
       name: commandName,
       ...props
     })
     console.log(`Loaded slash command: ${commandName}`)
   })
-  // Register commands
+  // Register command
   synchronizeSlashCommands(client, client.commands.map((c) => ({
     name: c.name,
     description: c.description,
