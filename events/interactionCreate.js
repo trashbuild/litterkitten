@@ -8,8 +8,8 @@ module.exports = (client, int) => {
   // Handle slash commands
   if (int.isCommand()) {
     // Verify command
-    const cmd = client.commands.get(int.commandName)
-    if (!cmd) {
+    const command = client.commands.get(int.commandName)
+    if (!command) {
       return int.reply({
         content: `"${int.commandName}" ${sounds.confused()}`,
         ephemeral: true
@@ -17,7 +17,7 @@ module.exports = (client, int) => {
     }
 
     // Verify user is in same voice channel as bot
-    if (cmd.voiceChannel) {
+    if (command.voiceChannel) {
       if (!int.member.voice.channel || (
         int.guild.me.voice.channel &&
         int.member.voice.channel.id !== int.guild.me.voice.channel.id
@@ -37,7 +37,8 @@ module.exports = (client, int) => {
     int.silent = false
 
     // Do command
-    cmd.run(client, int)
+    console.log(`Running slash command: ${int.commandName}`)
+    command.run(client, int)
   }
 
   // Handle buttons

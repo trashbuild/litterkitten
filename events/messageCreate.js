@@ -26,5 +26,6 @@ module.exports = (client, int) => {
   int.args = args
   int.silent = false
   int.user = int.author
+  console.log(`Running message command: ${int.commandName}`)
   command.run(client, int)
 }
