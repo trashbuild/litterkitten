@@ -1,4 +1,4 @@
-const sounds = require('../kitten-sounds.js')
+// const sounds = require('../kitten-sounds.js')
 
 module.exports = {
   description: 'For when it is Wednesday.',
