@@ -17,7 +17,7 @@ module.exports = {
     // Get search terms
     if (interaction.args.length < 1) {
       return interaction.reply({
-        content: 'Please enter a valid song name. ❌',
+        content: `${sounds.confused()} :musical_note: :question:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -32,7 +32,7 @@ module.exports = {
     // Return if no results
     if (!res || !res.tracks.length) {
       return interaction.reply({
-        content: 'No search results found.',
+        content: `${sounds.no()} :x: :weary:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -48,7 +48,7 @@ module.exports = {
     const maxTracks = res.tracks.slice(0, 10)
     const embed = new MessageEmbed()
       .setColor('BLUE')
-      .setTitle(`Searched Music: ${name}`)
+      .setTitle(name)
       .setDescription(
         `${maxTracks.map((track, i) => `**${i + 1}**. ${track.title} | \`${track.author}\``).join('\n')}\n\nChoose a song from **1** to **${maxTracks.length}** write send or write **cancel** and cancel selection.⬇️`
       ).setTimestamp()
@@ -65,7 +65,7 @@ module.exports = {
     collector.on('collect', async (query) => {
       if (query.content.toLowerCase() === 'cancel') {
         interaction.reply({
-          content: 'Call cancelled. ✅',
+          content: ':x:',
           ephemeral: true
         }).catch(e => { })
         collector.stop()

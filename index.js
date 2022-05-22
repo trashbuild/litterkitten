@@ -79,7 +79,7 @@ client.player = new Player(client, {
 })
 client.player.on('trackStart', (queue, track) => {
   queue.metadata.send({
-    content: `**${track.title}** :musical_note: :white_check_mark:`
+    content: `**${track.title}** :musical_note:`
   }).catch(e => { })
 })
 

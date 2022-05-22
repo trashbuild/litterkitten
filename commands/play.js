@@ -16,7 +16,7 @@ module.exports = {
     // Verify that some info was provided
     if (interaction.args.length < 1) {
       return interaction.reply({
-        content: `${sounds.confusion()} :question::floppy_disc::question:`,
+        content: `${sounds.confusion()} :floppy_disc: :question:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -31,7 +31,7 @@ module.exports = {
     // Verify music info
     if (!res || !res.tracks.length) {
       return interaction.reply({
-        content: `${sounds.no()} :x::weary::x:`,
+        content: `${sounds.no()} :x: :weary:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -45,7 +45,7 @@ module.exports = {
 
     // Send "working" message
     await interaction.channel.send({
-      content: `${sounds.working()} :desktop: :cd: :musical_note:`
+      content: sounds.working()
     })
 
     // Establish/verify connection
@@ -56,7 +56,7 @@ module.exports = {
     } catch {
       await client.player.deleteQueue(interaction.guild.id)
       return interaction.reply({
-        content: `${sounds.angy()} :desktop: :x: :musical_note:`,
+        content: `${sounds.angy()} :x: :desktop:`,
         ephemeral: true
       })
     }
