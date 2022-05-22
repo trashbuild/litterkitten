@@ -24,10 +24,11 @@ module.exports = {
       .setColor('BLUE')
       .setThumbnail(track.thumbnail)
       .setTitle(track.title)
-      .addField(':speaker:', `%${queue.volume}`)
-      .addField(':timer:', `${timestamp.progress === 'Forever' ? ':infinity:' : track.duration}`)
-      .addField(':link:', `${track.url}`)
-      .addField(':question:', `${track.requestedBy}`)
+      .setDescription(
+        `:speaker: %${queue.volume}
+        :timer: ${timestamp.progress === 'Forever' ? ':infinity:' : track.duration}
+        :link: [direct link](${track.url})
+        :question: ${track.requestedBy}`)
       .setTimestamp()
 
     // Create save button

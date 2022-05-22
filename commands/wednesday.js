@@ -17,9 +17,5 @@ module.exports = {
         client.commands.get('volume').run(client, interaction)
       }, 5000)
       )
-    return interaction.reply({
-      content: `${sounds.yes()} :video_game: :musical_note: :bangbang:`,
-      ephemeral: true
-    }).catch(e => { })
   }
 }
