@@ -6,9 +6,7 @@ module.exports = {
   options: [],
   voiceChannel: true,
   run: async (client, interaction) => {
-    interaction.args = [
-      'https://www.youtube.com/watch?v=9Y6uWBIPZVU&list=PLp3lk5Yt8dYZamVFnDcM1OIdHZSvHo8EP'
-    ]
+    interaction.args = [client.config.wednesday]
     client.commands.get('play').run(client, interaction)
       .then(setTimeout(() => {
         interaction.silent = true
