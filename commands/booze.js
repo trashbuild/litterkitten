@@ -39,7 +39,6 @@ module.exports = {
       .addField('Glass', drink.strGlass)
       .addField('Ingredients', ingredients.join('\n'))
       .addField('Instructions', drink.strInstructions)
-      .setTimestamp()
 
     // Reply
     interaction.reply({ embeds: [embed] }).catch(e => { })
