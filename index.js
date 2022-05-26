@@ -73,26 +73,52 @@ client.player = new Player(client, {
     }
   }
 })
-client.player.on('trackStart', (queue, track) => {
+
+// Event handling
+client.player.on('botDisconnect', (queue) => {
+  console.log('botDisconnect')
+  queue.destroy()
+})
+
+client.player.on('channelEmpty', (queue) => {
+  console.log('channelEmpty')
+  queue.stop()
+})
+
+client.player.on('connectionError', (queue, error) => {
+  console.log('[connectionError]')
+  console.log(error)
   queue.metadata.send({
-    content: `**${track.title}** :musical_note:`
+    content: `Connection error for **${queue.track.title}**, skipping...`
   }).catch(e => { })
+  queue.skip()
+})
+
+client.player.on('error', (queue, error) => {
+  console.log('error')
+  console.log(error)
+  queue.metadata.send({
+    content: 'Unspecified error, clearing queue.'
+  }).catch(e => { })
+  queue.destroy()
+})
+
+client.player.on('queueEnd', (queue) => {
+  if (queue.connection) queue.connection.disconnect()
 })
 
 client.player.on('trackAdd', (queue, track) => {
+  console.log(`Added: ${track.title}`)
   queue.metadata.send({
     content: `**${track.title}** :white_check_mark:`
   }).catch(e => { })
 })
 
-// client.player.on('channelEmpty', (queue) => {
-//   queue.metadata.send({
-//     content: ''
-//   }).catch(e => { })
-// })
-
-client.player.on('queueEnd', (queue) => {
-  if (queue.connection) queue.connection.disconnect()
+client.player.on('trackStart', (queue, track) => {
+  console.log(`Playing: ${track.title}`)
+  queue.metadata.send({
+    content: `**${track.title}** :musical_note:`
+  }).catch(e => { })
 })
 
 // Login!
