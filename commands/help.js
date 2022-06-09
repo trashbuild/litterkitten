@@ -7,7 +7,7 @@ module.exports = {
   showHelp: false,
 
   run: async (client, interaction) => {
-    // Get list of commands (except this one)
+    // Get list of commands (except hidden ones)
     const commands = client.commands.filter(x => x.showHelp !== false)
 
     // Create embed

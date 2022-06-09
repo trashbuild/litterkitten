@@ -35,7 +35,7 @@ module.exports = {
       .setTitle(drink.strDrink)
       .setThumbnail(`${drink.strDrinkThumb}/preview`)
       .addField('Category', drink.strCategory)
-      // .addField('IBA', drink.strIBA)
+      .addField('IBA', drink.strIBA)
       .addField('Glass', drink.strGlass)
       .addField('Ingredients', ingredients.join('\n'))
       .addField('Instructions', drink.strInstructions)
