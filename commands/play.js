@@ -13,10 +13,22 @@ module.exports = {
   voiceChannel: true,
 
   run: async (client, interaction) => {
+    // Try to resume playback if no args given
+    if (interaction.args.length === 0) {
+      const queue = client.player.getQueue(interaction.guild.id)
+      if (queue && !queue.playing) {
+        await queue.play()
+        return interaction.reply({
+          content: `${sounds.confused()} :floppy_disc: :question:`,
+          ephemeral: true
+        }).catch(e => { })
+      }
+    }
+
     // Verify that some info was provided
     if (interaction.args.length < 1) {
       return interaction.reply({
-        content: `${sounds.confusion()} :floppy_disc: :question:`,
+        content: `${sounds.confused()} :floppy_disc: :question:`,
         ephemeral: true
       }).catch(e => { })
     }

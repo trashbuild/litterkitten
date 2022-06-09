@@ -89,7 +89,7 @@ client.player.on('connectionError', (queue, error) => {
   console.log('[connectionError]')
   console.log(error)
   queue.metadata.send({
-    content: `Connection error for **${queue.track.title}**, skipping...`
+    content: 'Connection error, skipping track...'
   }).catch(e => { })
   queue.skip()
 })
