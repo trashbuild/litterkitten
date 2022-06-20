@@ -4,25 +4,27 @@ const { Player } = require('discord-player')
 const { Client, Intents, Collection } = require('discord.js')
 // Built-in filesystem reader
 const fs = require('fs')
+// Simplify registering commands with Discord
+const synchronizeSlashCommands = require('discord-sync-commands-v14')
 
 // Create the actual bot with the things it intends to do
 const client = new Client({
   intents: [
+    Intents.FLAGS.DIRECT_MESSAGES,
+    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
     Intents.FLAGS.GUILDS,
     Intents.FLAGS.GUILD_MEMBERS,
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_VOICE_STATES
-  ]
+  ],
+  partials: ['CHANNEL'] // Fixes a bug where bots don't get notified of DMs
 })
 
 // Load the config file
 client.config = require('./config.json')
 
-// Make commands available from client.commands
+// Load commands from "commands" directory
 client.commands = new Collection()
-
-// Register slash commands from "commands" directory
-const synchronizeSlashCommands = require('discord-sync-commands-v14')
 fs.readdir('./commands/', (_err, files) => {
   // Load command
   files.forEach((file) => {
@@ -33,7 +35,7 @@ fs.readdir('./commands/', (_err, files) => {
       name: commandName,
       ...props
     })
-    console.log(`Loaded slash command: ${commandName}`)
+    // console.log(`Loaded slash command: ${commandName}`)
   })
   // Register command
   synchronizeSlashCommands(client, client.commands.map((c) => ({
@@ -52,7 +54,7 @@ fs.readdir('./events', (_err, files) => {
     if (!file.endsWith('.js')) return
     const event = require(`./events/${file}`)
     const eventName = file.split('.')[0]
-    console.log(`Event loaded: ${eventName}`)
+    // console.log(`Loaded event: ${eventName}`)
     client.on(eventName, event.bind(null, client))
     delete require.cache[require.resolve(`./events/${file}`)]
   })
