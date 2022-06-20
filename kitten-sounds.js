@@ -1,4 +1,4 @@
-function sound (arr) {
+function sound(arr) {
   return arr[Math.floor(Math.random() * arr.length)]
 }
 
@@ -20,6 +20,12 @@ module.exports = {
     'Mrmph.',
     'Merp.',
     'Ermph.'
+  ]),
+  oops: () => sound([
+    'Wherf!',
+    'Whoomph!',
+    'Whorp.',
+    'Whumpf.'
   ]),
   working: () => sound([
     'Hrrm...',
