@@ -94,15 +94,17 @@ client.player.on('connectionError', (queue, error) => {
     content: 'Connection error, skipping track...'
   }).catch(e => { })
   queue.skip()
+  queue.play()
 })
 
 client.player.on('error', (queue, error) => {
   console.log('error')
   console.log(error)
   queue.metadata.send({
-    content: 'Unspecified error, clearing queue.'
+    content: 'Unspecified error, trying to skip...'
   }).catch(e => { })
-  queue.destroy()
+  queue.skip()
+  queue.play()
 })
 
 client.player.on('queueEnd', (queue) => {
