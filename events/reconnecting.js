@@ -1,3 +1,3 @@
-module.exports = (client, int) => {
+module.exports = (client, interaction) => {
   console.log('Reconnecting...')
 }
