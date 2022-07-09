@@ -4,23 +4,22 @@ const sounds = require('../kitten-sounds.js')
 
 const urlBase = 'https://www.thecocktaildb.com/api/json/v1/1/'
 
-function sendMenu(drinks, interaction) {
+function sendMenu(drinks, client, interaction) {
   // Create response
   const embed = new MessageEmbed()
     .setColor(client.config.color)
 
   // Add drink results to response
-  const content = []
-  drinks.forEach((drink, i) => {
-    content.push(`${String(i)} - ${drink.strDrink ?? 'Mystery drink!'}`)
+  const content = drinks.map((drink, i) => {
+    return `${String(i)} - ${drink.strDrink ?? 'Mystery drink!'}`
   })
-  embed.addField(`Found ${drinks.length}:`, content.join('\n'))
+  embed.addField(`${drinks.length} matches:`, content.join('\n'))
 
   // Send response
   return interaction.reply({ embeds: [embed] }).catch(e => { })
 }
 
-function sendRecipe(drink, interaction) {
+function sendRecipe(drink, client, interaction) {
   // Get ingredients
   const ingredients = []
   for (let i = 1; i < 16; i++) {
@@ -34,7 +33,7 @@ function sendRecipe(drink, interaction) {
 
   // Create response
   const embed = new MessageEmbed()
-    .setColor('BLUE')
+    .setColor(client.config.color)
     .setTitle(drink.strDrink ?? 'Mystery drink!')
     .setThumbnail(`${drink.strDrinkThumb}/preview`)
     .addField('Category', drink.strCategory ?? 'None')
@@ -57,6 +56,7 @@ module.exports = {
     required: false
   }],
   voiceChannel: false,
+
   run: async (client, interaction) => {
     const url = interaction.args.length
       ? `${urlBase}search.php?s=${interaction.args.join('_')}`
@@ -69,18 +69,18 @@ module.exports = {
       const drinks = response.data.drinks
       if (!drinks) {
         return interaction.reply({
-          content: `${sounds.oops()} :zero: :crying_cat_face:`,
+          content: `${sounds.oops()} :zero:`,
           ephemeral: true
         }).catch(e => { })
       }
 
       // Send recipe if there is only one drink
       if (drinks.length === 1) {
-        return sendRecipe(drinks[0], interaction)
+        return sendRecipe(drinks[0], client, interaction)
       }
 
       // Send menu if there are multiple drinks
-      return sendMenu(drinks, interaction)
+      return sendMenu(drinks, client, interaction)
     }).catch((err) => {
       console.log(err)
     })
