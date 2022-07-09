@@ -21,6 +21,7 @@ module.exports = {
         `${commands.size} commands available:`,
         commands.map(x => `\`/${x.name}\``).join(' | ')
       )
+      .addField('Source', 'https://github.com/trashbuild/litterkitten')
       .setTimestamp()
       .setFooter({
         text: 'Kitten how-to',
