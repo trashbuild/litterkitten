@@ -17,7 +17,7 @@ module.exports = {
     // Get search terms
     if (interaction.args.length < 1) {
       return interaction.reply({
-        content: `${sounds.confused()} :musical_note: :question:`,
+        content: `${sounds.confused()} :musical_note:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -32,7 +32,7 @@ module.exports = {
     // Return if no results
     if (!res || !res.tracks.length) {
       return interaction.reply({
-        content: `${sounds.no()} :x: :weary:`,
+        content: `${sounds.no()} :x:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -87,7 +87,7 @@ module.exports = {
       } catch {
         await client.player.deleteQueue(interaction.guild.id)
         return interaction.reply({
-          content: `${sounds.confused()} :question: :microphone: :question:`,
+          content: `${sounds.confused()} :microphone:`,
           ephemeral: true
         }).catch(e => { })
       }

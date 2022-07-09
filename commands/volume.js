@@ -10,12 +10,13 @@ module.exports = {
     required: true
   }],
   voiceChannel: true,
+
   run: async (client, interaction) => {
     // Get queue
     const queue = client.player.getQueue(interaction.guild.id)
     if (!queue || !queue.playing) {
       return interaction.reply({
-        content: `${sounds.confused()} :musical_note: :question:`,
+        content: `${sounds.confused()} :mute:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -47,7 +48,7 @@ module.exports = {
     // Reply (or don't)
     if (interaction.silent) return
     return interaction.reply({
-      content: success ? `${sounds.yes()} 🔊 **%${vol}**` : sounds.confused()
+      content: success ? `${sounds.yes()} 🔊 **%${vol}**` : `${sounds.confused()} :mute:`
     }).catch(e => { })
   }
 }

@@ -11,7 +11,7 @@ module.exports = (client, interaction) => {
     const command = client.commands.get(interaction.commandName)
     if (!command) {
       return interaction.reply({
-        content: `"${interaction.commandName}" ${sounds.confused()}`,
+        content: sounds.confused(),
         ephemeral: true
       })
     }
@@ -23,7 +23,7 @@ module.exports = (client, interaction) => {
         interaction.member.voice.channel.id !== interaction.guild.me.voice.channel.id
       )) {
         return interaction.reply({
-          content: `${sounds.confused()} :question::microphone::question:`,
+          content: `${sounds.confused()} :microphone:`,
           ephemeral: true
         })
       }

@@ -12,7 +12,7 @@ module.exports = {
     const queue = client.player.getQueue(interaction.guild.id)
     if (!queue || !queue.playing) {
       return interaction.reply({
-        content: `${sounds.confused()} :musical_note: :question:`,
+        content: `${sounds.confused()} :mute:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -20,7 +20,7 @@ module.exports = {
     // Return if no music
     if (!queue.tracks[0]) {
       return interaction.reply({
-        content: `${sounds.confused()} :zero: :musical_note:`,
+        content: `${sounds.no()} :zero:`,
         ephemeral: true
       }).catch(e => { })
     }

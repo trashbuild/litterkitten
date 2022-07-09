@@ -19,7 +19,7 @@ module.exports = {
       if (queue && !queue.playing) {
         await queue.play()
         return interaction.reply({
-          content: `${sounds.confused()} :floppy_disc: :question:`,
+          content: `${sounds.confused()} :floppy_disc:`,
           ephemeral: true
         }).catch(e => { })
       }
@@ -43,7 +43,7 @@ module.exports = {
     // Verify music info
     if (!res || !res.tracks.length) {
       return interaction.reply({
-        content: `${sounds.no()} :x: :weary:`,
+        content: `${sounds.no()} :weary:`,
         ephemeral: true
       }).catch(e => { })
     }
@@ -68,7 +68,7 @@ module.exports = {
     } catch {
       await client.player.deleteQueue(interaction.guild.id)
       return interaction.reply({
-        content: `${sounds.angy()} :x: :desktop:`,
+        content: `${sounds.angy()} :desktop:`,
         ephemeral: true
       })
     }
