@@ -29,8 +29,8 @@ module.exports = {
     const tracks = queue.tracks.map(
       (track, i) => `**${i + 1}** - ${track.title} | ${track.author}`
     )
-    const songs = queue.tracks.length
-    const nextSongs = songs > 5 ? `+ **${songs - 5}**` : `**${songs}**`
+    const n = queue.tracks.length
+    const nextSongs = n > 5 ? `+ **${n - 5}**` : `**${n}**`
     const embed = new MessageEmbed()
       .setColor(client.config.color)
       .setThumbnail(queue.current.thumbnail)

@@ -32,6 +32,6 @@ module.exports = (client, interaction) => {
   interaction.args = args
   interaction.silent = false
   interaction.user = interaction.author
-  console.log(`Running message command: ${interaction.commandName}`)
+  console.log(`Running message command: ${command.name} ${args.join(' ')}`)
   command.run(client, interaction)
 }

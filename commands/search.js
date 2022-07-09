@@ -50,7 +50,8 @@ module.exports = {
       .setColor(client.config.color)
       .setTitle(name)
       .setDescription(
-        `${maxTracks.map((track, i) => `**${i + 1}**. ${track.title} | \`${track.author}\``).join('\n')}\n\nChoose a song from **1** to **${maxTracks.length}** write send or write **cancel** and cancel selection.⬇️`
+        `${maxTracks.map((track, i) => `**${i + 1}**. ${track.title} | \`${track.author}\``)
+          .join('\n')}\n\nChoose a song from **1** to **${maxTracks.length}** write send or write **cancel** and cancel selection.⬇️`
       ).setTimestamp()
 
     // Reply
@@ -58,7 +59,7 @@ module.exports = {
 
     // Handle responses
     const collector = interaction.channel.createMessageCollector({
-      time: 15000,
+      time: 60000,
       errors: ['time'],
       filter: m => m.author.id === interaction.user.id
     })
