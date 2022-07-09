@@ -13,7 +13,7 @@ module.exports = {
   voiceChannel: true,
 
   run: async (client, interaction) => {
-    // Try to resume playback if no args given
+    // If no args given, just try to resume playback
     if (interaction.args.length === 0) {
       const queue = client.player.getQueue(interaction.guild.id)
       if (queue && !queue.playing) {
@@ -25,15 +25,7 @@ module.exports = {
       }
     }
 
-    // Verify that some info was provided
-    if (interaction.args.length < 1) {
-      return interaction.reply({
-        content: `${sounds.confused()} :floppy_disc: :question:`,
-        ephemeral: true
-      }).catch(e => { })
-    }
-
-    // Find music
+    // If args given, search for those terms
     const music = interaction.args[0]
     const res = await client.player.search(music, {
       requestedBy: interaction.member,
@@ -48,16 +40,16 @@ module.exports = {
       }).catch(e => { })
     }
 
+    // Send "working" message
+    interaction.channel.send({
+      content: sounds.working()
+    })
+
     // Create/receive queue
     const queue = await client.player.createQueue(interaction.guild, {
       leaveOnEnd: true,
       autoSelfDeaf: true,
       metadata: interaction.channel
-    })
-
-    // Send "working" message
-    await interaction.channel.send({
-      content: sounds.working()
     })
 
     // Establish/verify connection
