@@ -54,7 +54,7 @@ module.exports = (client, interaction) => {
           })
         } else {
           const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor(client.config.color)
             .setTitle('Saved track')
             .setThumbnail(client.user.displayAvatarURL())
             .addField('Track', `\`${queue.current.title}\``)
@@ -95,7 +95,7 @@ module.exports = (client, interaction) => {
           }
 
           const embed = new MessageEmbed()
-            .setColor('BLUE')
+            .setColor(client.config.color)
             .setTitle(queue.current.title)
             .setThumbnail(client.user.displayAvatarURL())
             .setTimestamp()

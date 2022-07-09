@@ -32,7 +32,7 @@ module.exports = {
     const songs = queue.tracks.length
     const nextSongs = songs > 5 ? `+ **${songs - 5}**` : `**${songs}**`
     const embed = new MessageEmbed()
-      .setColor('BLUE')
+      .setColor(client.config.color)
       .setThumbnail(queue.current.thumbnail)
       .setTitle('Playlist')
       .setDescription(

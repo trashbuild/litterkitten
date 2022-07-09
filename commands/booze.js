@@ -7,8 +7,7 @@ const urlBase = 'https://www.thecocktaildb.com/api/json/v1/1/'
 function sendMenu(drinks, interaction) {
   // Create response
   const embed = new MessageEmbed()
-    .setColor('BLUE')
-    .setTitle('Search results')
+    .setColor(client.config.color)
 
   // Add drink results to response
   const content = []

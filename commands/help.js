@@ -12,7 +12,7 @@ module.exports = {
 
     // Create embed
     const embed = new MessageEmbed()
-      .setColor('BLUE')
+      .setColor(client.config.color)
       .setTitle(client.user.username)
       .setThumbnail(client.user.displayAvatarURL())
       .setDescription('"It hath an head like a swine, and a tail like a rat,' +

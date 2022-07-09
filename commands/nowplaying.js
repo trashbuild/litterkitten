@@ -21,7 +21,7 @@ module.exports = {
     const track = queue.current
     const timestamp = queue.getPlayerTimestamp()
     const embed = new MessageEmbed()
-      .setColor('BLUE')
+      .setColor(client.config.color)
       .setThumbnail(track.thumbnail)
       .setTitle(track.title)
       .setDescription(

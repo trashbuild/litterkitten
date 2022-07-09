@@ -47,7 +47,7 @@ module.exports = {
     // Create embed
     const maxTracks = res.tracks.slice(0, 10)
     const embed = new MessageEmbed()
-      .setColor('BLUE')
+      .setColor(client.config.color)
       .setTitle(name)
       .setDescription(
         `${maxTracks.map((track, i) => `**${i + 1}**. ${track.title} | \`${track.author}\``).join('\n')}\n\nChoose a song from **1** to **${maxTracks.length}** write send or write **cancel** and cancel selection.⬇️`
