@@ -68,6 +68,7 @@ client.player = new Player(client, {
   loopMessage: false,
   discordPlayer: {
     ytdlOptions: {
+      filter: 'audioonly',
       quality: 'highestaudio',
       highWaterMark: 1 << 27 // 128 MB
     }
@@ -91,7 +92,7 @@ client.player.on('connectionError', (queue, error) => {
   // queue.metadata.send({
   //   content: 'Connection error, skipping track...'
   // }).catch(e => { console.log(e) })
-  queue.skip()
+  // queue.skip()
   queue.play()
 })
 
@@ -101,7 +102,7 @@ client.player.on('error', (queue, error) => {
   // queue.metadata.send({
   //   content: 'Unspecified error, skipping track...'
   // }).catch(e => { console.log(e) })
-  queue.skip()
+  // queue.skip()
   queue.play()
 })
 
