@@ -11,7 +11,6 @@ module.exports = {
     required: true
   }],
   voiceChannel: true,
-
   run: async (client, interaction) => {
     // If no args given, just try to resume playback
     if (interaction.args.length === 0) {
@@ -21,7 +20,7 @@ module.exports = {
         return interaction.reply({
           content: `${sounds.confused()} :floppy_disc:`,
           ephemeral: true
-        }).catch(e => { })
+        }).catch(e => { console.log(e) })
       }
     }
 
@@ -37,7 +36,7 @@ module.exports = {
       return interaction.reply({
         content: `${sounds.no()} :weary:`,
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
 
     // Send "working" message

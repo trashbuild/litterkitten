@@ -67,12 +67,12 @@ module.exports = (client, interaction) => {
             return interaction.reply({
               content: `${sounds.yes()} :white_check_mark:`,
               ephemeral: true
-            }).catch(e => { })
+            }).catch(e => { console.log(e) })
           }).catch(e => {
             return interaction.reply({
               content: `${sounds.confused()} :x::incoming_envelope::x:`,
               ephemeral: true
-            }).catch(e => { })
+            }).catch(e => { console.log(e) })
           })
         }
         break
@@ -91,7 +91,7 @@ module.exports = (client, interaction) => {
           if (timestamp.progress === 'Infinity') {
             return interaction.message.edit({
               content: ':infinity:'
-            }).catch(e => { })
+            }).catch(e => { console.log(e) })
           }
 
           const embed = new MessageEmbed()

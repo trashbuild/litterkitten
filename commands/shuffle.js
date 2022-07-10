@@ -13,7 +13,7 @@ module.exports = {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
 
     // Shuffle
@@ -28,6 +28,6 @@ module.exports = {
     return interaction.reply({
       content: `${sounds.yes()} :white_check_mark:`,
       ephemeral: true
-    }).catch(e => { })
+    }).catch(e => { console.log(e) })
   }
 }

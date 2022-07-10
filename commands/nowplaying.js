@@ -14,7 +14,7 @@ module.exports = {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
 
     // Create embed
@@ -26,7 +26,9 @@ module.exports = {
       .setTitle(track.title)
       .setDescription(
         `:speaker: %${queue.volume}
-        :timer: ${timestamp.progress === 'Forever' ? ':infinity:' : track.duration}
+        :timer: ${timestamp.progress === 'Forever'
+          ? ':infinity:'
+          : track.duration}
         :link: [direct link](${track.url})
         :question: ${track.requestedBy}`)
       .setTimestamp()
@@ -39,6 +41,7 @@ module.exports = {
     const row = new MessageActionRow().addComponents(saveButton)
 
     // Send reply
-    interaction.reply({ embeds: [embed], components: [row] }).catch(e => { })
+    interaction.reply({ embeds: [embed], components: [row] })
+      .catch(e => { console.log(e) })
   }
 }

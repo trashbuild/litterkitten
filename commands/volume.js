@@ -18,7 +18,7 @@ module.exports = {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
 
     const vol = parseInt(interaction.args[0])
@@ -26,7 +26,7 @@ module.exports = {
       return interaction.reply({
         content: sounds.confused(),
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
 
     if (queue.volume === vol) {
@@ -45,10 +45,12 @@ module.exports = {
 
     const success = queue.setVolume(vol)
 
-    // Reply (or don't)
+    // Reply
     if (interaction.silent) return
     return interaction.reply({
-      content: success ? `${sounds.yes()} 🔊 **%${vol}**` : `${sounds.confused()} :mute:`
-    }).catch(e => { })
+      content: success
+        ? `${sounds.yes()} 🔊 **%${vol}**`
+        : `${sounds.confused()} :mute:`
+    }).catch(e => { console.log(e) })
   }
 }

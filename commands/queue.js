@@ -14,7 +14,7 @@ module.exports = {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
 
     // Return if no music
@@ -22,7 +22,7 @@ module.exports = {
       return interaction.reply({
         content: `${sounds.no()} :zero:`,
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
 
     // Create embed
@@ -42,6 +42,7 @@ module.exports = {
       .setTimestamp()
 
     // Reply
-    interaction.reply({ embeds: [embed] }).catch(e => { })
+    interaction.reply({ embeds: [embed] })
+      .catch(e => { console.log(e) })
   }
 }

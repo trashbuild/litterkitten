@@ -13,7 +13,7 @@ module.exports = {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
 
     // Try to skip current song
@@ -21,8 +21,10 @@ module.exports = {
 
     // Return whether it worked or not
     return interaction.reply({
-      content: success ? `${sounds.yes()} :white_check_mark:` : `${sounds.confused()} :mute:`,
+      content: success
+        ? `${sounds.yes()} :white_check_mark:`
+        : `${sounds.confused()} :mute:`,
       ephemeral: true
-    }).catch(e => { })
+    }).catch(e => { console.log(e) })
   }
 }

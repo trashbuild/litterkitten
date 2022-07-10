@@ -35,7 +35,6 @@ fs.readdir('./commands/', (_err, files) => {
       name: commandName,
       ...props
     })
-    // console.log(`Loaded slash command: ${commandName}`)
   })
   // Register command
   synchronizeSlashCommands(client, client.commands.map((c) => ({
@@ -54,7 +53,6 @@ fs.readdir('./events', (_err, files) => {
     if (!file.endsWith('.js')) return
     const event = require(`./events/${file}`)
     const eventName = file.split('.')[0]
-    // console.log(`Loaded event: ${eventName}`)
     client.on(eventName, event.bind(null, client))
     delete require.cache[require.resolve(`./events/${file}`)]
   })
@@ -88,11 +86,11 @@ client.player.on('channelEmpty', (queue) => {
 })
 
 client.player.on('connectionError', (queue, error) => {
-  console.log('[connectionError]')
+  console.log('connectionError')
   console.log(error)
-  queue.metadata.send({
-    content: 'Connection error, skipping track...'
-  }).catch(e => { })
+  // queue.metadata.send({
+  //   content: 'Connection error, skipping track...'
+  // }).catch(e => { console.log(e) })
   queue.skip()
   queue.play()
 })
@@ -100,9 +98,9 @@ client.player.on('connectionError', (queue, error) => {
 client.player.on('error', (queue, error) => {
   console.log('error')
   console.log(error)
-  queue.metadata.send({
-    content: 'Unspecified error, trying to skip...'
-  }).catch(e => { })
+  // queue.metadata.send({
+  //   content: 'Unspecified error, skipping track...'
+  // }).catch(e => { console.log(e) })
   queue.skip()
   queue.play()
 })
@@ -115,14 +113,14 @@ client.player.on('trackAdd', (queue, track) => {
   console.log(`Added: ${track.title}`)
   queue.metadata.send({
     content: `**${track.title}** :white_check_mark:`
-  }).catch(e => { })
+  }).catch(e => { console.log(e) })
 })
 
 client.player.on('trackStart', (queue, track) => {
   console.log(`Playing: ${track.title}`)
   queue.metadata.send({
     content: `**${track.title}** :musical_note:`
-  }).catch(e => { })
+  }).catch(e => { console.log(e) })
 })
 
 // Login!

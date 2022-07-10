@@ -19,7 +19,7 @@ module.exports = {
       return interaction.reply({
         content: `${sounds.confused()} :musical_note:`,
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
     const name = interaction.args[0]
 
@@ -32,9 +32,9 @@ module.exports = {
     // Return if no results
     if (!res || !res.tracks.length) {
       return interaction.reply({
-        content: `${sounds.no()} :x:`,
+        content: `${sounds.no()} :zero:`,
         ephemeral: true
-      }).catch(e => { })
+      }).catch(e => { console.log(e) })
     }
 
     // Get queue
@@ -50,37 +50,41 @@ module.exports = {
       .setColor(client.config.color)
       .setTitle(name)
       .setDescription(
-        `${maxTracks.map((track, i) => `**${i + 1}**. ${track.title} | \`${track.author}\``)
-          .join('\n')}\n\nChoose a song from **1** to **${maxTracks.length}** write send or write **cancel** and cancel selection.⬇️`
+        `${maxTracks.map(
+          (track, i) => `**${i + 1}**. ${track.title} | \`${track.author}\``)
+          .join('\n')}\n\n :hash::grey_question:`
       ).setTimestamp()
 
     // Reply
-    interaction.reply({ embeds: [embed] }).catch(e => { })
+    interaction.reply({ embeds: [embed] })
+      .catch(e => { console.log(e) })
 
-    // Handle responses
+    // Handle responses using a collector
     const collector = interaction.channel.createMessageCollector({
       time: 60000,
       errors: ['time'],
       filter: m => m.author.id === interaction.user.id
     })
+
+    // On message...
     collector.on('collect', async (query) => {
+      // Cancel
       if (query.content.toLowerCase() === 'cancel') {
         interaction.reply({
-          content: ':x:',
+          content: `${sounds.yes()} :x:`,
           ephemeral: true
-        }).catch(e => { })
+        }).catch(e => { console.log(e) })
         collector.stop()
       }
-
+      // Ignore invalid answers
       const value = parseInt(query.content)
-      if (!value || value <= 0 || value > maxTracks.length) {
-        return interaction.reply({
-          content: `Select **1** to **${maxTracks.length}** and write **send** or type **cancel**.`,
-          ephemeral: true
-        }).catch(e => { })
-      }
-
+      if (!value || value <= 0 || value > maxTracks.length) return
+      // Confirm valid answer
       collector.stop()
+      await interaction.reply({
+        content: sounds.working()
+      }).catch(e => { console.log(e) })
+      // Get queue
       try {
         if (!queue.connection) {
           await queue.connect(interaction.member.voice.channel)
@@ -90,23 +94,20 @@ module.exports = {
         return interaction.reply({
           content: `${sounds.confused()} :microphone:`,
           ephemeral: true
-        }).catch(e => { })
+        }).catch(e => { console.log(e) })
       }
-
-      await interaction.reply({
-        content: 'Loading...'
-      }).catch(e => { })
-
+      // Add track and play
       queue.addTrack(res.tracks[Number(query.content) - 1])
       if (!queue.playing) await queue.play()
     })
 
+    // On timeout, complain
     collector.on('end', (msg, reason) => {
       if (reason === 'time') {
         return interaction.reply({
-          content: 'Search time expired',
+          content: `${sounds.angy()} :alarm_clock:`,
           ephemeral: true
-        }).catch(e => { })
+        }).catch(e => { console.log(e) })
       }
     })
   }

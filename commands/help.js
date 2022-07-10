@@ -29,6 +29,7 @@ module.exports = {
       })
 
     // Send reply
-    interaction.reply({ embeds: [embed] }).catch(e => { })
+    interaction.reply({ embeds: [embed] })
+      .catch(e => { console.log(e) })
   }
 }
