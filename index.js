@@ -79,11 +79,13 @@ client.player = new Player(client, {
 client.player.on('botDisconnect', (queue) => {
   console.log('botDisconnect')
   queue.destroy()
+  client.user.setActivity('a bug', { type: 'WATCHING' })
 })
 
 client.player.on('channelEmpty', (queue) => {
   console.log('channelEmpty')
   queue.stop()
+  client.user.setActivity('a bug', { type: 'WATCHING' })
 })
 
 client.player.on('connectionError', (queue, error) => {
@@ -108,6 +110,7 @@ client.player.on('error', (queue, error) => {
 
 client.player.on('queueEnd', (queue) => {
   if (queue.connection) queue.connection.disconnect()
+  client.user.setActivity('a bug', { type: 'WATCHING' })
 })
 
 client.player.on('trackAdd', (queue, track) => {
@@ -120,8 +123,13 @@ client.player.on('trackAdd', (queue, track) => {
 client.player.on('trackStart', (queue, track) => {
   console.log(`Playing: ${track.title}`)
   queue.metadata.send({
-    content: `**${track.title}** :musical_note:`
+    content: `:musical_note: **${track.title}**`
   }).catch(e => { console.log(e) })
+  client.user.setActivity(track.title, {
+    name: track.title,
+    type: 'STREAMING',
+    url: track.url
+  })
 })
 
 // Login!
