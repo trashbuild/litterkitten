@@ -71,7 +71,7 @@ client.player = new Player(client, {
   discordPlayer: {
     ytdlOptions: {
       quality: 'highestaudio',
-      highWaterMark: 1 << 25
+      highWaterMark: 1 << 27 // 128 MB
     }
   }
 })
