@@ -21,13 +21,11 @@ function sendRecipe(drink, client, interaction) {
   const ingredients = []
   for (let i = 1; i < 16; i++) {
     const amount = drink[`strMeasure${i}`]
+    if (amount === null) break
     const ingredient = drink[`strIngredient${i}`]
-    if (amount === null || ingredient === null) break
-    // ingredient = ingredient.split('')
-    // ingredient[0] = ingredient[0].toLowerCase()
+    if (ingredient === null) break
     ingredients.push(`${amount} ${ingredient.toLowerCase()}`)
   }
-
   // Create response
   const embed = new MessageEmbed()
     .setColor(client.config.color)
@@ -48,7 +46,7 @@ module.exports = {
   description: 'Make a booze!',
   name: 'booze',
   options: [{
-    description: 'Cocktail name to search for',
+    description: 'Cocktail search terms. If not provided, will return a random drink.',
     name: 'name',
     type: 'STRING',
     required: false
@@ -56,13 +54,14 @@ module.exports = {
   voiceChannel: false,
 
   run: async (client, interaction) => {
+    // Set request url based on whether search terms are given or not
+    const urlBase = 'https://www.thecocktaildb.com/api/json/v1/1/'
     const url = interaction.args.length
       ? `${urlBase}search.php?s=${interaction.args.join('_')}`
       : `${urlBase}random.php`
 
-    axios.get(
-      url
-    ).then((response) => {
+    // Send request url and handle results
+    axios.get(url).then((response) => {
       // Send sad sound if no results
       const drinks = response.data.drinks
       if (!drinks) {
