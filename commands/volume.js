@@ -21,28 +21,17 @@ module.exports = {
       }).catch(e => { console.log(e) })
     }
 
+    // Verify new volume
     const vol = parseInt(interaction.args[0])
-    if (!vol) {
+    if (!vol || vol < 0 || vol > 100) {
       return interaction.reply({
-        content: sounds.confused(),
+        content: `${sounds.confused()} :hash:`,
         ephemeral: true
       }).catch(e => { console.log(e) })
     }
+    if (queue.volume === vol) return
 
-    if (queue.volume === vol) {
-      return interaction.reply({
-        content: sounds.no(),
-        ephemeral: true
-      }).catch(e => { })
-    }
-
-    if (vol < 0 || vol > 100) {
-      return interaction.reply({
-        content: sounds.confused(),
-        ephemeral: true
-      }).catch(e => { })
-    }
-
+    // Try to set volume
     const success = queue.setVolume(vol)
 
     // Reply
