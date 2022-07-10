@@ -48,7 +48,8 @@ module.exports = {
     const queue = await client.player.createQueue(interaction.guild, {
       leaveOnEnd: true,
       autoSelfDeaf: true,
-      metadata: interaction.channel
+      metadata: interaction.channel,
+      volumeSmoothness: false // Fixes max volume on track start
     })
 
     // Establish/verify connection
