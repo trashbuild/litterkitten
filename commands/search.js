@@ -21,7 +21,7 @@ module.exports = {
         ephemeral: true
       }).catch(e => { console.log(e) })
     }
-    const name = interaction.args[0]
+    const name = interaction.args.join(' ')
 
     // Search
     const res = await client.player.search(name, {

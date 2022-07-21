@@ -25,7 +25,7 @@ module.exports = {
     }
 
     // If args given, search for those terms
-    const music = interaction.args[0]
+    const music = interaction.args.join(' ')
     const res = await client.player.search(music, {
       requestedBy: interaction.member,
       searchEngine: QueryType.AUTO
