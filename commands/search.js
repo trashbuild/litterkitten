@@ -71,14 +71,20 @@ module.exports = {
       // Cancel
       if (query.content.toLowerCase() === 'cancel') {
         interaction.reply({
-          content: `${sounds.yes()} :x:`,
+          content: `${sounds.yes()} :white_check_mark:`,
           ephemeral: true
         }).catch(e => { console.log(e) })
         collector.stop()
       }
       // Ignore invalid answers
       const value = parseInt(query.content)
-      if (!value || value <= 0 || value > maxTracks.length) return
+      if (!value || value <= 0 || value > maxTracks.length) {
+        interaction.reply({
+          content: `${sounds.angy()} :hash::exclamation`,
+          ephemeral: true
+        }).catch(e => { console.log(e) })
+      }
+
       // Confirm valid answer
       collector.stop()
       await interaction.reply({
