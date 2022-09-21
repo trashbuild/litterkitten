@@ -1,8 +1,9 @@
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder } = require('discord.js')
 
 module.exports = {
-  description: 'How to the kitten.',
   name: 'help',
+  type: 1,
+  description: 'How to the kitten.',
   options: [],
   showHelp: false,
 
@@ -11,17 +12,19 @@ module.exports = {
     const commands = client.commands.filter(x => x.showHelp !== false)
 
     // Create embed
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(client.config.color)
       .setTitle(client.user.username)
       .setThumbnail(client.user.displayAvatarURL())
       .setDescription('"It hath an head like a swine, and a tail like a rat,' +
         ' and is of the bigness of a cat."')
-      .addField(
-        `${commands.size} commands available:`,
-        commands.map(x => `\`/${x.name}\``).join(' | ')
+      .addFields(
+        {
+          name: `${commands.size} commands available:`,
+          value: commands.map(x => `\`/${x.name}\``).join(' | ')
+        },
+        { name: 'Source', value: 'https://github.com/trashbuild/litterkitten' }
       )
-      .addField('Source', 'https://github.com/trashbuild/litterkitten')
       .setTimestamp()
       .setFooter({
         text: 'Kitten how-to',

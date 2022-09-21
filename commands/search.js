@@ -1,14 +1,15 @@
 const sounds = require('../kitten-sounds.js')
-const { MessageEmbed } = require('discord.js')
+const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js')
 const { QueryType } = require('discord-player')
 
 module.exports = {
-  description: 'Find music.',
   name: 'search',
+  type: 1,
+  description: 'Find music.',
   options: [{
+    type: ApplicationCommandOptionType.String,
     name: 'name',
     description: 'Search terms.',
-    type: 'STRING',
     required: true
   }],
   voiceChannel: true,
@@ -46,7 +47,7 @@ module.exports = {
 
     // Create embed
     const maxTracks = res.tracks.slice(0, 10)
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(client.config.color)
       .setTitle(name)
       .setDescription(

@@ -1,9 +1,10 @@
 const sounds = require('../kitten-sounds.js')
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder } = require('discord.js')
 
 module.exports = {
-  description: 'Show the playlist.',
   name: 'queue',
+  type: 1,
+  description: 'Show the playlist.',
   options: [],
   voiceChannel: true,
 
@@ -31,7 +32,7 @@ module.exports = {
     )
     const n = queue.tracks.length
     const nextSongs = n > 5 ? `+ **${n - 5}**` : `**${n}**`
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(client.config.color)
       .setThumbnail(queue.current.thumbnail)
       .setTitle('Playlist')

@@ -1,8 +1,9 @@
 const sounds = require('../kitten-sounds.js')
 
 module.exports = {
-  description: 'Switches the music being played.',
   name: 'skip',
+  type: 1,
+  description: 'Switches the music being played.',
   options: [],
   voiceChannel: true,
 

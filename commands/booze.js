@@ -1,16 +1,18 @@
 const axios = require('axios')
-const { MessageEmbed } = require('discord.js')
 const sounds = require('../kitten-sounds.js')
+const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js')
 
 function sendMenu(drinks, client, interaction) {
-  // Create response
-  const embed = new MessageEmbed()
-    .setColor(client.config.color)
-  // Add drink results to response
-  const content = drinks.map((drink, i) => {
+  // Create menu
+  const menu = drinks.map((drink, i) => {
     return `${String(i)} - ${drink.strDrink ?? 'Mystery drink!'}`
-  })
-  embed.addField(`${drinks.length} matches:`, content.join('\n'))
+  }).join('\n')
+  // Create response
+  const embed = new EmbedBuilder()
+    .setColor(client.config.color)
+    .addFields(
+      { name: `${drinks.length} matches:`, value: menu }
+    )
   // Send response
   return interaction.reply({ embeds: [embed] })
     .catch(e => { console.log(e) })
@@ -27,15 +29,17 @@ function sendRecipe(drink, client, interaction) {
     ingredients.push(`${amount} ${ingredient.toLowerCase()}`)
   }
   // Create response
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setColor(client.config.color)
     .setTitle(drink.strDrink ?? 'Mystery drink!')
     .setThumbnail(`${drink.strDrinkThumb}/preview`)
-    .addField('Category', drink.strCategory ?? 'None')
-    .addField('IBA', drink.strIBA ?? 'None')
-    .addField('Glass', drink.strGlass ?? 'None')
-    .addField('Ingredients', ingredients.join('\n'))
-    .addField('Instructions', drink.strInstructions ?? 'None')
+    .addFields(
+      { name: 'Category', value: drink.strCategory ?? 'None' },
+      { name: 'IBA', value: drink.strIBA ?? 'None' },
+      { name: 'Glass', value: drink.strGlass ?? 'None' },
+      { name: 'Ingredients', value: ingredients.join('\n') },
+      { name: 'Instructions', value: drink.strInstructions ?? 'None' }
+    )
   // Send response
   return interaction.reply({ embeds: [embed] })
     .catch(e => { console.log(e) })
@@ -43,12 +47,13 @@ function sendRecipe(drink, client, interaction) {
 
 // Main
 module.exports = {
-  description: 'Make a booze!',
   name: 'booze',
+  type: 1,
+  description: 'Make a booze!',
   options: [{
-    description: 'Cocktail search terms. If not provided, will return a random drink.',
     name: 'name',
-    type: 'STRING',
+    type: ApplicationCommandOptionType.String,
+    description: 'Cocktail search terms. If not provided, will return a random drink.',
     required: false
   }],
   voiceChannel: false,

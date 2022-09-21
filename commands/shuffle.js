@@ -1,8 +1,9 @@
 const sounds = require('../kitten-sounds.js')
 
 module.exports = {
-  description: 'Shuffles the playlist.',
   name: 'shuffle',
+  type: 1,
+  description: 'Shuffles the playlist.',
   options: [],
   voiceChannel: true,
 

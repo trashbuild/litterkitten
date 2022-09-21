@@ -1,12 +1,9 @@
 const sounds = require('../kitten-sounds.js')
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder } = require('discord.js')
 
 module.exports = (client, interaction) => {
-  // Verify server
-  if (!interaction.guild) return
-
   // Handle slash commands
-  if (interaction.isCommand()) {
+  if (interaction.isChatInputCommand()) {
     // Verify command
     const command = client.commands.get(interaction.commandName)
     if (!command) {
@@ -19,8 +16,8 @@ module.exports = (client, interaction) => {
     // Verify user is in same voice channel as bot
     if (command.voiceChannel) {
       if (!interaction.member.voice.channel || (
-        interaction.guild.me.voice.channel &&
-        interaction.member.voice.channel.id !== interaction.guild.me.voice.channel.id
+        interaction.guild.members.me.voice.channel &&
+        interaction.member.voice.channel.id !== interaction.guild.members.me.voice.channel.id
       )) {
         return interaction.reply({
           content: `${sounds.confused()} :microphone:`,
@@ -53,16 +50,17 @@ module.exports = (client, interaction) => {
             components: []
           })
         } else {
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setColor(client.config.color)
             .setTitle('Saved track')
             .setThumbnail(client.user.displayAvatarURL())
-            .addField('Track', `\`${queue.current.title}\``)
-            .addField('Duration', `\`${queue.current.duration}\``)
-            .addField('URL', `${queue.current.url}`)
-            .addField('Saved Server', `\`${interaction.guild.name}\``)
-            .addField('Requested By', `${queue.current.requestedBy}`)
-            .setTimestamp()
+            .addFields(
+              { name: 'Track', value: `\`${queue.current.title}\`` },
+              { name: 'Duration', value: `\`${queue.current.duration}\`` },
+              { name: 'URL', value: `${queue.current.url}` },
+              { name: 'Saved Server', value: `\`${interaction.guild.name}\`` },
+              { name: 'Requested By', value: `${queue.current.requestedBy}` }
+            ).setTimestamp()
           interaction.member.send({ embeds: [embed] }).then(() => {
             return interaction.reply({
               content: `${sounds.yes()} :white_check_mark:`,
@@ -94,7 +92,7 @@ module.exports = (client, interaction) => {
             }).catch(e => { console.log(e) })
           }
 
-          const embed = new MessageEmbed()
+          const embed = new EmbedBuilder()
             .setColor(client.config.color)
             .setTitle(queue.current.title)
             .setThumbnail(client.user.displayAvatarURL())

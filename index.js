@@ -1,23 +1,27 @@
-// Music player
-const { Player } = require('discord-player')
-// Discord interface
-const { Client, Intents, Collection } = require('discord.js')
 // Built-in filesystem reader
 const fs = require('fs')
+// Discord interface
+const {
+  Client,
+  Collection,
+  GatewayIntentBits,
+  Partials
+} = require('discord.js')
+// Music player
+const { Player } = require('discord-player')
+// const downloader = require('@discord-player/downloader').Downloader
 // Simplify registering commands with Discord
 const synchronizeSlashCommands = require('discord-sync-commands-v14')
 
 // Create the actual bot with the things it intends to do
 const client = new Client({
   intents: [
-    Intents.FLAGS.DIRECT_MESSAGES,
-    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MEMBERS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_VOICE_STATES
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates
   ],
-  partials: ['CHANNEL'] // Fixes a bug where bots don't get notified of DMs
+  partials: [Partials.Channel] // Fixes a bug where bots don't get notified of DMs
 })
 
 // Load the config file
@@ -39,9 +43,9 @@ fs.readdir('./commands/', (_err, files) => {
   // Register command
   synchronizeSlashCommands(client, client.commands.map((c) => ({
     name: c.name,
-    description: c.description,
+    type: c.type,
     options: c.options,
-    type: 'CHAT_INPUT'
+    description: c.description
   })), {
     debug: false
   })
@@ -64,16 +68,19 @@ client.player = new Player(client, {
     leaveOnEnd: true,
     autoSelfDeaf: true
   },
+  bufferingTimeout: 6000,
   maxVol: 100,
   loopMessage: false,
   discordPlayer: {
     ytdlOptions: {
       filter: 'audioonly',
-      quality: 'highestaudio',
-      highWaterMark: 1 << 27 // 128 MB
+      // opusEncoded: true,
+      quality: 'highestaudio'
+      // highwatermark: 1 << 30
     }
   }
 })
+// client.player.use('YOUTUBE_DL', downloader)
 
 // Event handling
 client.player.on('botDisconnect', (queue) => {
@@ -91,20 +98,12 @@ client.player.on('channelEmpty', (queue) => {
 client.player.on('connectionError', (queue, error) => {
   console.log('connectionError')
   console.log(error)
-  // queue.metadata.send({
-  //   content: 'Connection error, skipping track...'
-  // }).catch(e => { console.log(e) })
-  // queue.skip()
   queue.play()
 })
 
 client.player.on('error', (queue, error) => {
   console.log('error')
   console.log(error)
-  // queue.metadata.send({
-  //   content: 'Unspecified error, skipping track...'
-  // }).catch(e => { console.log(e) })
-  // queue.skip()
   queue.play()
 })
 
@@ -116,20 +115,20 @@ client.player.on('queueEnd', (queue) => {
 client.player.on('trackAdd', (queue, track) => {
   console.log(`Added: ${track.title}`)
   queue.metadata.send({
-    content: `**${track.title}** :white_check_mark:`
+    content: `:white_check_mark: ${track.title}`
   }).catch(e => { console.log(e) })
 })
 
 client.player.on('trackStart', (queue, track) => {
   console.log(`Playing: ${track.title}`)
   queue.metadata.send({
-    content: `:musical_note: **${track.title}**`
+    content: `:musical_note: ${track.title}`
   }).catch(e => { console.log(e) })
-  client.user.setActivity(track.title, {
-    name: track.title,
-    type: 'STREAMING',
-    url: track.url
-  })
+  // client.user.setActivity(track.title, {
+  //   name: track.title,
+  //   type: 'STREAMING',
+  //   url: track.url
+  // })
 })
 
 // Login!

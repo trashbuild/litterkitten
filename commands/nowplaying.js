@@ -1,9 +1,10 @@
 const sounds = require('../kitten-sounds.js')
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+const { EmbedBuilder, MessageActionRow, MessageButton } = require('discord.js')
 
 module.exports = {
-  description: 'Current track info.',
   name: 'nowplaying',
+  type: 1,
+  description: 'Current track info.',
   options: [],
   voiceChannel: true,
 
@@ -20,7 +21,7 @@ module.exports = {
     // Create embed
     const track = queue.current
     const timestamp = queue.getPlayerTimestamp()
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setColor(client.config.color)
       .setThumbnail(track.thumbnail)
       .setTitle(track.title)

@@ -1,12 +1,14 @@
+const { ApplicationCommandOptionType } = require('discord.js')
 const sounds = require('../kitten-sounds.js')
 
 module.exports = {
-  description: 'Adjust the music volume.',
   name: 'volume',
+  type: 1,
+  description: 'Adjust the music volume.',
   options: [{
+    type: ApplicationCommandOptionType.Integer,
     name: 'volume',
     description: 'Volume, from 0 to 100.',
-    type: 'INTEGER',
     required: true
   }],
   voiceChannel: true,

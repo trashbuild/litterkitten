@@ -1,8 +1,9 @@
 const sounds = require('../kitten-sounds.js')
 
 module.exports = {
-  description: 'Can\'t, won\'t.',
   name: 'stop',
+  type: 1,
+  description: "Can't, won't.",
   options: [],
   voiceChannel: true,
 
