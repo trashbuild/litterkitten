@@ -1,16 +1,14 @@
-// Built-in filesystem reader
+// JS imports
 const fs = require('fs')
-// Discord interface
+
+// Discord imports
 const {
   Client,
   Collection,
   GatewayIntentBits,
   Partials
 } = require('discord.js')
-// Music player
 const { Player } = require('discord-player')
-// const downloader = require('@discord-player/downloader').Downloader
-// Simplify registering commands with Discord
 const synchronizeSlashCommands = require('discord-sync-commands-v14')
 
 // Create the actual bot with the things it intends to do
@@ -21,7 +19,8 @@ const client = new Client({
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.GuildVoiceStates
   ],
-  partials: [Partials.Channel] // Fixes a bug where bots don't get notified of DMs
+  // Fix failure to read DMs
+  partials: [Partials.Channel]
 })
 
 // Load the config file
@@ -74,13 +73,11 @@ client.player = new Player(client, {
   discordPlayer: {
     ytdlOptions: {
       filter: 'audioonly',
-      // opusEncoded: true,
       quality: 'highestaudio'
       // highwatermark: 1 << 30
     }
   }
 })
-// client.player.use('YOUTUBE_DL', downloader)
 
 // Event handling
 client.player.on('botDisconnect', (queue) => {

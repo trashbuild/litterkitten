@@ -38,11 +38,10 @@ module.exports = {
     }
 
     // If args given, search for those terms
-    const music = interaction.args.join(' ')
-    const res = await client.player.search(music, {
-      requestedBy: interaction.member,
-      searchEngine: QueryType.AUTO
-    })
+    const res = await client.player.search(
+      interaction.args.join(' '),
+      { requestedBy: interaction.member, searchEngine: QueryType.AUTO }
+    )
 
     // Verify music info
     if (!res || !res.tracks.length) {
@@ -56,9 +55,9 @@ module.exports = {
     await interaction.reply({
       content: sounds.working(),
       ephemeral: true
-    })
+    }).catch(e => { console.log(e) })
 
-    // Create/receive queue
+    // Create queue for this guild (server)
     const queue = await client.player.createQueue(interaction.guild, {
       leaveOnEnd: true,
       autoSelfDeaf: true,
@@ -68,18 +67,23 @@ module.exports = {
       // Fix "can't play resource that has already ended"
       async onBeforeCreateStream(track, source, _queue) {
         if (source === 'youtube') {
-          return (await playdl.stream(track.url, { discordPlayerCompatibility: true })).stream
+          return (
+            await playdl.stream(
+              track.url,
+              { discordPlayerCompatibility: true }
+            )).stream
         }
       }
     })
 
-    // Establish/verify connection
+    // Establish/verify voice channel connection
     try {
       if (!queue.connection) {
         await queue.connect(interaction.member.voice.channel)
           .catch(e => { console.log(e) })
       }
     } catch {
+      // Delete queue on failure
       await client.player.deleteQueue(interaction.guild.id)
       return interaction.editReply({
         content: `${sounds.angy()} :desktop:`,
@@ -87,11 +91,16 @@ module.exports = {
       })
     }
 
-    // Add track(s) and play
+    // Add track(s)
     res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0])
+    // Play (if not already playing)
     if (!queue.playing) await queue.play()
+    // Report success
     if (queue.playing) {
-      interaction.editReply(`${sounds.yes()}:white_check_mark`)
+      interaction.editReply({
+        content: `${sounds.yes()}:white_check_mark`,
+        ephemeral: false
+      })
     }
   }
 }

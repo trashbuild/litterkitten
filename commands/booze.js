@@ -53,7 +53,7 @@ module.exports = {
   options: [{
     name: 'name',
     type: ApplicationCommandOptionType.String,
-    description: 'Cocktail search terms. If not provided, will return a random drink.',
+    description: 'Search terms. If not provided, will return a random drink.',
     required: false
   }],
   voiceChannel: false,
