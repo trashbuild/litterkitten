@@ -124,11 +124,11 @@ client.player.on('trackStart', (queue, track) => {
   queue.metadata.send({
     content: `:musical_note: ${track.title}`
   }).catch(e => { console.log(e) })
-  // client.user.setActivity(track.title, {
-  //   name: track.title,
-  //   type: 'STREAMING',
-  //   url: track.url
-  // })
+  client.user.setActivity(track.title, {
+    name: track.title,
+    type: 'STREAMING',
+    url: track.url
+  })
 })
 
 // Login!
