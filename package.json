@@ -4,11 +4,11 @@
     "discord-player": "^5.3.1",
     "discord-sync-commands-v14": "^2.0.0",
     "discord.js": "^14.3.0",
+    "ffmpeg-static": "^5.1.0",
     "nodemon": "^2.0.16",
     "opusscript": "^0.0.8",
     "play-dl": "^1.9.5",
-    "ytdl": "^1.4.1",
-    "ytdl-core": "^4.11.2"
+    "ytdl": "^1.4.1"
   },
   "main": "index.js",
   "scripts": {
