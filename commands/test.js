@@ -4,6 +4,7 @@ module.exports = {
   description: 'Test!',
   options: [],
   showHelp: false,
+
   run: async (client, interaction) => {
     console.log(interaction)
     interaction.reply('hello!')

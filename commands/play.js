@@ -15,6 +15,7 @@ module.exports = {
     required: true
   }],
   voiceChannel: true,
+
   run: async (client, interaction) => {
     // Verify that channel is correct
     if (interaction.channel.id !== '416808433493344269') {
