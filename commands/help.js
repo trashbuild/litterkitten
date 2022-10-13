@@ -1,14 +1,16 @@
-const { EmbedBuilder } = require('discord.js')
+const {
+  EmbedBuilder,
+  SlashCommandBuilder
+} = require('discord.js')
 
 module.exports = {
-  name: 'help',
-  type: 1,
-  description: 'How to the kitten.',
-  options: [],
-  showHelp: false,
+  data: new SlashCommandBuilder()
+    .setName('help')
+    .setDescription('How to the kitten.'),
 
-  run: async (client, interaction) => {
+  async execute(interaction) {
     // Get list of commands (except hidden ones)
+    const client = interaction.client
     const commands = client.commands.filter(x => x.showHelp !== false)
 
     // Create embed

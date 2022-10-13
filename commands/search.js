@@ -1,23 +1,22 @@
 const sounds = require('../kitten-sounds.js')
 const { QueryType } = require('discord-player')
 const {
-  ApplicationCommandOptionType,
-  EmbedBuilder
+  EmbedBuilder,
+  SlashCommandBuilder
 } = require('discord.js')
 
 module.exports = {
-  name: 'search',
-  type: 1,
-  description: 'Find music.',
-  options: [{
-    type: ApplicationCommandOptionType.String,
-    name: 'name',
-    description: 'Search terms.',
-    required: true
-  }],
-  voiceChannel: true,
+  data: new SlashCommandBuilder()
+    .setName('search')
+    .setDescription('Search for tracks to play.')
+    .addStringOption(option =>
+      option.setName('terms')
+        .setDescription('Search terms.')
+        .setRequired(true)),
 
-  run: async (client, interaction) => {
+  async execute(interaction) {
+    const client = interaction.client
+
     // Get search terms
     if (interaction.args.length < 1) {
       return interaction.reply({
@@ -46,7 +45,7 @@ module.exports = {
       leaveOnEnd: true,
       autoSelfDeaf: true,
       metadata: interaction.channel
-    })
+    }).catch(e => { console.log(e) })
 
     // Create embed
     const maxTracks = res.tracks.slice(0, 10)

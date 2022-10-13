@@ -1,20 +1,20 @@
 const sounds = require('../kitten-sounds.js')
-const { ApplicationCommandOptionType } = require('discord.js')
+const { SlashCommandBuilder } = require('discord.js')
 
 module.exports = {
-  name: 'volume',
-  type: 1,
-  description: 'Adjust the music volume.',
-  options: [{
-    type: ApplicationCommandOptionType.Integer,
-    name: 'volume',
-    description: 'Volume, from 0 to 100.',
-    required: true
-  }],
-  voiceChannel: true,
+  data: new SlashCommandBuilder()
+    .setName('volume')
+    .setDescription('Set playback volume.')
+    .addIntegerOption(option =>
+      option.setName('volume')
+        .setDescription('Volume')
+        .setRequired(true)
+        .setMinValue(0)
+        .setMaxValue(100)),
 
-  run: async (client, interaction) => {
+  async execute(interaction) {
     // Get queue
+    const client = interaction.client
     const queue = client.player.getQueue(interaction.guild.id)
     if (!queue || !queue.playing) {
       return interaction.reply({

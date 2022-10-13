@@ -2,17 +2,17 @@ const sounds = require('../kitten-sounds.js')
 const {
   ActionRowBuilder,
   ButtonBuilder,
-  EmbedBuilder
+  EmbedBuilder,
+  SlashCommandBuilder
 } = require('discord.js')
 
 module.exports = {
-  name: 'nowplaying',
-  type: 1,
-  description: 'Current track info.',
-  options: [],
-  voiceChannel: true,
+  data: new SlashCommandBuilder()
+    .setName('nowplaying')
+    .setDescription('Show current track info.'),
 
-  run: async (client, interaction) => {
+  async execute(interaction) {
+    const client = interaction.client
     // Verify that a song is playing
     const queue = client.player.getQueue(interaction.guild.id)
     if (!queue || !queue.playing) {

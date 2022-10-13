@@ -1,5 +1,6 @@
-// JS imports
-const fs = require('fs')
+// Node imports
+const fs = require('node:fs')
+const path = require('node:path')
 
 // Discord imports
 const {
@@ -9,7 +10,6 @@ const {
   Partials
 } = require('discord.js')
 const { Player } = require('discord-player')
-const synchronizeSlashCommands = require('discord-sync-commands-v14')
 
 // Create the actual bot with the things it intends to do
 const client = new Client({
@@ -26,40 +26,30 @@ const client = new Client({
 // Load the config file
 client.config = require('./config.json')
 
-// Load commands from "commands" directory
+// Load commands from "commands" directory into client.commands
 client.commands = new Collection()
-fs.readdir('./commands/', (_err, files) => {
-  // Load command
-  files.forEach((file) => {
-    if (!file.endsWith('.js')) return
-    const props = require(`./commands/${file}`)
-    const commandName = file.split('.')[0]
-    client.commands.set(commandName, {
-      name: commandName,
-      ...props
-    })
-  })
-  // Register command
-  synchronizeSlashCommands(client, client.commands.map((c) => ({
-    name: c.name,
-    type: c.type,
-    options: c.options,
-    description: c.description
-  })), {
-    debug: false
-  })
-})
+const commandsPath = path.join(__dirname, 'commands')
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
+for (const file of commandFiles) {
+  const filePath = path.join(commandsPath, file)
+  const command = require(filePath)
+  const commandName = file.split('.')[0]
+  client.commands.set(commandName, command)
+}
 
-// Handle events from "events" directory
-fs.readdir('./events', (_err, files) => {
-  files.forEach((file) => {
-    if (!file.endsWith('.js')) return
-    const event = require(`./events/${file}`)
-    const eventName = file.split('.')[0]
-    client.on(eventName, event.bind(null, client))
-    delete require.cache[require.resolve(`./events/${file}`)]
-  })
-})
+// Load events from "events" directory
+const eventsPath = path.join(__dirname, 'events')
+const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'))
+for (const file of eventFiles) {
+  const filePath = path.join(eventsPath, file)
+  const event = require(filePath)
+  const eventName = file.split('.')[0]
+  if (event.once) {
+    client.once(eventName, (...args) => event.execute(...args))
+  } else {
+    client.on(eventName, (...args) => event.execute(...args))
+  }
+}
 
 // Build the music player
 client.player = new Player(client, {

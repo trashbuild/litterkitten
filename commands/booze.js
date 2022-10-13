@@ -1,20 +1,19 @@
 const axios = require('axios')
 const sounds = require('../kitten-sounds.js')
 const {
-  ApplicationCommandOptionType,
-  EmbedBuilder
-  // SelectMenuBuilder
+  EmbedBuilder,
+  // SelectMenuBuilder,
+  SlashCommandBuilder
 } = require('discord.js')
 
 // TODO: use SelectMenu instead of numbers
-function sendMenu(drinks, client, interaction) {
+function sendMenu(drinks, interaction) {
   // Create menu
   const menu = drinks.map((drink, i) => {
     return `${String(i)} - ${drink.strDrink ?? 'Mystery drink!'}`
   }).join('\n')
   // Create response
   const embed = new EmbedBuilder()
-    .setColor(client.config.color)
     .addFields(
       { name: `${drinks.length} matches:`, value: menu }
     )
@@ -23,7 +22,7 @@ function sendMenu(drinks, client, interaction) {
     .catch(e => { console.log(e) })
 }
 
-function sendRecipe(drink, client, interaction) {
+function sendRecipe(drink, interaction) {
   // Get ingredients (max 16 per API spec)
   const ingredients = []
   for (let i = 1; i < 16; i++) {
@@ -35,7 +34,6 @@ function sendRecipe(drink, client, interaction) {
   }
   // Create response
   const embed = new EmbedBuilder()
-    .setColor(client.config.color)
     .setTitle(drink.strDrink ?? 'Mystery drink!')
     .setThumbnail(`${drink.strDrinkThumb}/preview`)
     .addFields(
@@ -52,18 +50,15 @@ function sendRecipe(drink, client, interaction) {
 
 // Main
 module.exports = {
-  name: 'booze',
-  type: 1,
-  description: 'Make a booze!',
-  options: [{
-    name: 'name',
-    type: ApplicationCommandOptionType.String,
-    description: 'Search terms. If not provided, will return a random drink.',
-    required: false
-  }],
-  voiceChannel: false,
+  data: new SlashCommandBuilder()
+    .setName('booze')
+    .setDescription('Make a booze!')
+    .addStringOption(option =>
+      option.setName('terms')
+        .setDescription('Search terms.')
+        .setRequired(false)),
 
-  run: async (client, interaction) => {
+  async execute(interaction) {
     // Set request url based on whether search terms are given or not
     const urlBase = 'https://www.thecocktaildb.com/api/json/v1/1/'
     const url = interaction.args.length
@@ -82,10 +77,10 @@ module.exports = {
       }
       // Send recipe if there is only one drink
       if (drinks.length === 1) {
-        return sendRecipe(drinks[0], client, interaction)
+        return sendRecipe(drinks[0], interaction)
       }
       // Send menu if there are multiple drinks
-      return sendMenu(drinks, client, interaction)
+      return sendMenu(drinks, interaction)
     }).catch((err) => { console.log(err) })
   }
 }

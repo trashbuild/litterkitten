@@ -1,3 +1,5 @@
-module.exports = (client, interaction) => {
-  console.log('Disconnected!')
+module.exports = {
+  execute(client) {
+    console.log('Disconnected!')
+  }
 }

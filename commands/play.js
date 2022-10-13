@@ -1,23 +1,22 @@
 const sounds = require('../kitten-sounds.js')
 const { QueryType } = require('discord-player')
-const { ApplicationCommandOptionType } = require('discord.js')
+const { SlashCommandBuilder } = require('discord.js')
 // Fix "cannot play resource that has already ended"
 const playdl = require('play-dl')
 
 module.exports = {
-  name: 'play',
-  type: 1,
-  description: 'Play music.',
-  options: [{
-    type: ApplicationCommandOptionType.String,
-    name: 'music',
-    description: 'Music title / link',
-    required: true
-  }],
-  voiceChannel: true,
+  data: new SlashCommandBuilder()
+    .setName('play')
+    .setDescription('Play music.')
+    .addStringOption(option =>
+      option.setName('track')
+        .setDescription('Track title or url')
+        .setRequired(false)),
 
-  run: async (client, interaction) => {
+  async execute(interaction) {
+    const client = interaction.client
     // Verify that channel is correct
+    // HACK: hardcoded #bot-spam
     if (interaction.channel.id !== '416808433493344269') {
       return interaction.reply({
         content: `${sounds.angy()} :x:`,

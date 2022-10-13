@@ -1,19 +1,21 @@
-module.exports = {
-  description: 'For when it is Wednesday.',
-  name: 'wednesday',
-  options: [],
-  voiceChannel: true,
+const { SlashCommandBuilder } = require('discord.js')
 
-  run: async (client, interaction) => {
+module.exports = {
+  data: new SlashCommandBuilder()
+    .setName('wednesday')
+    .setDescription('For when it is Wednesday.'),
+
+  async execute(interaction) {
     // Load Wednesday playlist from config file
+    const client = interaction.client
     interaction.args = [client.config.wednesday]
     // Play, then shuffle and set volume after timeout
-    client.commands.get('play').run(client, interaction)
+    client.commands.get('play').execute(interaction)
       .then(setTimeout(() => {
         interaction.silent = true
-        client.commands.get('shuffle').run(client, interaction)
+        client.commands.get('shuffle').execute(interaction)
         interaction.args = [25]
-        client.commands.get('volume').run(client, interaction)
+        client.commands.get('volume').execute(interaction)
       }, 6000))
   }
 }

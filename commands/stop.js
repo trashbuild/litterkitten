@@ -1,14 +1,14 @@
 const sounds = require('../kitten-sounds.js')
+const { SlashCommandBuilder } = require('discord.js')
 
 module.exports = {
-  name: 'stop',
-  type: 1,
-  description: "Can't, won't.",
-  options: [],
-  voiceChannel: true,
+  data: new SlashCommandBuilder()
+    .setName('stop')
+    .setDescription('Stop music playback.'),
 
-  run: async (client, interaction) => {
+  async execute(interaction) {
     // Get queue
+    const client = interaction.client
     const queue = client.player.getQueue(interaction.guild.id)
     if (!queue || !queue.playing) {
       return interaction.reply({

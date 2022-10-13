@@ -1,14 +1,14 @@
 const sounds = require('../kitten-sounds.js')
+const { SlashCommandBuilder } = require('discord.js')
 
 module.exports = {
-  name: 'shuffle',
-  type: 1,
-  description: 'Shuffles the playlist.',
-  options: [],
-  voiceChannel: true,
+  data: new SlashCommandBuilder()
+    .setName('shuffle')
+    .setDescription('Shuffle the current playlist.'),
 
-  run: async (client, interaction) => {
+  async execute(interaction) {
     // Get queue
+    const client = interaction.client
     const queue = client.player.getQueue(interaction.guild.id)
     if (!queue || !queue.playing) {
       return interaction.reply({
