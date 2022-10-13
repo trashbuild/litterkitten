@@ -1,5 +1,5 @@
-const { ApplicationCommandOptionType } = require('discord.js')
 const sounds = require('../kitten-sounds.js')
+const { ApplicationCommandOptionType } = require('discord.js')
 
 module.exports = {
   name: 'volume',

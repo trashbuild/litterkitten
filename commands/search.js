@@ -1,6 +1,9 @@
 const sounds = require('../kitten-sounds.js')
-const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js')
 const { QueryType } = require('discord-player')
+const {
+  ApplicationCommandOptionType,
+  EmbedBuilder
+} = require('discord.js')
 
 module.exports = {
   name: 'search',

@@ -1,7 +1,12 @@
 const axios = require('axios')
 const sounds = require('../kitten-sounds.js')
-const { ApplicationCommandOptionType, EmbedBuilder } = require('discord.js')
+const {
+  ApplicationCommandOptionType,
+  EmbedBuilder
+  // SelectMenuBuilder
+} = require('discord.js')
 
+// TODO: use SelectMenu instead of numbers
 function sendMenu(drinks, client, interaction) {
   // Create menu
   const menu = drinks.map((drink, i) => {
