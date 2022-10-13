@@ -1,5 +1,9 @@
 const sounds = require('../kitten-sounds.js')
-const { EmbedBuilder, MessageActionRow, MessageButton } = require('discord.js')
+const {
+  ActionRowBuilder,
+  ButtonBuilder,
+  EmbedBuilder
+} = require('discord.js')
 
 module.exports = {
   name: 'nowplaying',
@@ -35,11 +39,11 @@ module.exports = {
       .setTimestamp()
 
     // Create save button
-    const saveButton = new MessageButton()
+    const saveButton = new ButtonBuilder()
       .setLabel('Save Song')
       .setCustomId('saveTrack')
       .setStyle('SUCCESS')
-    const row = new MessageActionRow().addComponents(saveButton)
+    const row = new ActionRowBuilder().addComponents(saveButton)
 
     // Send reply
     interaction.reply({ embeds: [embed], components: [row] })
