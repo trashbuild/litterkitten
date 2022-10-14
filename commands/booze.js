@@ -68,6 +68,12 @@ async function sendMenu(drinks, interaction) {
     sendRecipe(drinks[Number(selection.values[0])], interaction)
     collector.resetTimer()
   })
+  collector.on('end', collected => {
+    interaction.editReply({
+      content: `Search for "${interaction.args.join(' ')}" complete.`,
+      components: []
+    })
+  })
 }
 
 // Main
