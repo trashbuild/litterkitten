@@ -1,4 +1,3 @@
-const axios = require('axios')
 const sounds = require('../kitten-sounds.js')
 const {
   ActionRowBuilder,
@@ -92,26 +91,29 @@ module.exports = {
       : `${urlBase}random.php`
 
     // Send request url and handle results
-    axios.get(url).then((response) => {
-      // Send sad sound if no results
-      const drinks = response.data.drinks
-      if (!drinks) {
-        return interaction.editReply(`:zero: ${sounds.no()}`)
-      }
-      // Send recipe if there is only one drink
-      if (drinks.length === 1) {
-        return sendRecipe(drinks[0], interaction)
-      }
-      // Send menu if there are multiple drinks
-      return sendMenu(drinks, interaction)
-    }).catch((e) => {
-      // Handle errors
-      if (e.code === 'ETIMEDOUT') {
-        interaction.editReply(`:x::alarm_clock: ${sounds.no()}`)
-      } else {
-        interaction.editReply(`:x: ${sounds.confused()}`)
-        console.log(e)
-      }
-    })
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        // Send sad sound if no results
+        const drinks = data.drinks
+        if (!drinks) {
+          return interaction.editReply(`:zero: ${sounds.no()}`)
+        }
+        // Send recipe if there is only one drink
+        if (drinks.length === 1) {
+          return sendRecipe(drinks[0], interaction)
+        }
+        // Send menu if there are multiple drinks
+        return sendMenu(drinks, interaction)
+      })
+      .catch((e) => {
+        // Handle errors
+        if (e.status === 504) {
+          interaction.editReply(`:x::alarm_clock: ${sounds.no()}`)
+        } else {
+          interaction.editReply(`:x: ${sounds.confused()}`)
+          console.log(e)
+        }
+      })
   }
 }
