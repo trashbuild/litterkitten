@@ -19,11 +19,15 @@ module.exports = {
     // }
 
     // Parse arguments and check for prefix
-    const args = interaction.content.split(' ')
-    if (args.shift() !== client.config.prefix) return
-
+    // const qualify = interaction.content.
+    if (!interaction.content.startsWith(client.config.prefix)) return
+    
     // Check that command exists
-    const command = client.commands.get(args.shift())
+    const args = interaction.content.slice(client.config.prefix.length).trim().split(' ')
+    console.log(args)
+    console.log(client.commands)
+    const command = client.commands.get(args)
+    console.log(command)
     if (!command) {
       return interaction.reply({
         content: sounds.confused(),
@@ -35,7 +39,7 @@ module.exports = {
     interaction.args = args
     interaction.silent = false
     interaction.user = interaction.author
-    console.log(`Running message command: ${command.name} ${args.join(' ')}`)
+    console.log(`Running message command: ${command.data.name} ${args.join(' ')}`)
     command.execute(interaction)
   }
 }

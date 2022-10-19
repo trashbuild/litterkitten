@@ -1,8 +1,0 @@
-{
-  "clientId": "your client ID",
-  "color": "BLUE",
-  "guildId": "your test server",
-  "prefix": "pls",
-  "token": "your secret token",
-  "wednesday": "playlist link for Wednesday command"
-}
