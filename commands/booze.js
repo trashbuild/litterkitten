@@ -87,7 +87,7 @@ module.exports = {
         .setRequired(false)),
 
   async execute(interaction) {
-    // Tell Discord we're working on it
+    // Tell Discord we're working on it (must reply within 3 sec)
     interaction.deferReply()
 
     // Set request url based on whether search terms are given or not

@@ -1,28 +1,9 @@
 const sounds = require('../kitten-sounds.js')
 const { QueryType } = require('discord-player')
-const {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  ComponentType,
-  EmbedBuilder,
-  SlashCommandBuilder
-} = require('discord.js')
+const { SlashCommandBuilder } = require('discord.js')
+const { buildEmbed, buildButtons } = require('../player.js')
 // Fix "cannot play resource that has already ended"
 const playdl = require('play-dl')
-
-function makeButton(btn) {
-  // Turn an {id, emoji} object into an actual button
-  return new ButtonBuilder()
-    .setCustomId(btn.id)
-    .setEmoji(btn.emoji)
-    .setStyle(ButtonStyle.Secondary)
-}
-
-function makeRow(row) {
-  // Turn a list of {id, emoji} objects into a simple action row
-  return new ActionRowBuilder().addComponents(row.map(makeButton))
-}
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -87,69 +68,10 @@ module.exports = {
     // Add track(s)
     res.playlist ? queue.addTracks(res.tracks) : queue.addTrack(res.tracks[0])
 
-    // Build control panel ---------------------------------------------------
-    // Track info embed
-    const embed = new EmbedBuilder()
-      // .setColor()
-      .setTitle('Music player')
-      .setURL('https://github.com/trashbuild/litterkitten')
-      // .setAuthor({ name: 'test', iconURL: ''})
-      .setDescription('Test embed!')
-      // .setThumbnail('test.png')
-      .addFields(
-        { name: 'test', value: 'test' }
-      )
-      // .setImage('test')
-      .setTimestamp()
-      .setFooter({ text: 'Footer text!' }) //, iconURL: 'test' })
-
-    // Buttons
-    const rows = [
-      [
-        { id: 'prev', emoji: '⏮️' },
-        { id: 'play', emoji: '⏯️' },
-        { id: 'stop', emoji: '⏹️' },
-        { id: 'next', emoji: '⏭️' }
-      ], [
-        { id: 'repeat', emoji: '🔁' },
-        { id: 'cool', emoji: '🆒' }
-      ]
-    ].map(makeRow)
-
     // Post music player to interaction channel
-    const message = await interaction.editReply({
-      embeds: [embed],
-      components: rows,
-      fetchReply: true
-    })
-
-    // Listen for button presses
-    const collector = message.createMessageComponentCollector({
-      componentType: ComponentType.ButtonBuilder
-    })
-    collector.on('collect', btn => {
-      btn.deferUpdate()
-      switch (btn.customId) {
-        case 'prev':
-          if (queue.previousTracks) queue.back()
-          break
-        case 'play':
-          queue.setPaused(!queue.connection.paused)
-          break
-        case 'stop':
-          queue.stop()
-          break
-        case 'next':
-          queue.skip()
-          break
-        case 'repeat':
-          queue.setRepeatMode((queue.repeatMode + 1 % 3))
-          break
-        // case 'cool':
-        //   console.log('cool')
-        default:
-          console.log(btn.customId)
-      }
+    interaction.editReply({
+      embeds: [buildEmbed(interaction)],
+      components: buildButtons(interaction)
     })
 
     // Play (if not already playing)

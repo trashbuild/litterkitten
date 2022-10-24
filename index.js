@@ -1,7 +1,6 @@
 // Node imports
 const fs = require('node:fs')
 const path = require('node:path')
-
 // Discord imports
 const {
   Client,
@@ -9,7 +8,8 @@ const {
   GatewayIntentBits,
   Partials
 } = require('discord.js')
-const { Player } = require('discord-player')
+// Local imports
+const { initPlayer } = require('./player.js')
 
 // Create the actual bot with the things it intends to do
 const client = new Client({
@@ -52,72 +52,8 @@ for (const file of eventFiles) {
   }
 }
 
-// Build the music player
-client.player = new Player(client, {
-  voiceConfig: {
-    leaveOnEnd: true,
-    autoSelfDeaf: true
-  },
-  bufferingTimeout: 6000,
-  maxVol: 100,
-  loopMessage: false,
-  discordPlayer: {
-    ytdlOptions: {
-      filter: 'audioonly',
-      quality: 'highestaudio'
-      // highwatermark: 1 << 30
-    }
-  }
-})
-
-// Event handling
-client.player.on('botDisconnect', (queue) => {
-  console.log('botDisconnect')
-  queue.destroy()
-  client.user.setActivity('a bug', { type: 'WATCHING' })
-})
-
-client.player.on('channelEmpty', (queue) => {
-  console.log('channelEmpty')
-  queue.stop()
-  client.user.setActivity('a bug', { type: 'WATCHING' })
-})
-
-client.player.on('connectionError', (queue, error) => {
-  console.log('connectionError')
-  console.log(error)
-  queue.play()
-})
-
-client.player.on('error', (queue, error) => {
-  console.log('error')
-  console.log(error)
-  queue.play()
-})
-
-client.player.on('queueEnd', (queue) => {
-  if (queue.connection) queue.connection.disconnect()
-  client.user.setActivity('a bug', { type: 'WATCHING' })
-})
-
-client.player.on('trackAdd', (queue, track) => {
-  console.log(`Added: ${track.title}`)
-  queue.metadata.send({
-    content: `:white_check_mark: ${track.title}`
-  }).catch(e => { console.log(e) })
-})
-
-client.player.on('trackStart', (queue, track) => {
-  console.log(`Playing: ${track.title}`)
-  queue.metadata.send({
-    content: `:musical_note: ${track.title}`
-  }).catch(e => { console.log(e) })
-  client.user.setActivity(track.title, {
-    name: track.title,
-    type: 'STREAMING',
-    url: track.url
-  })
-})
+// Load music player from player.js
+initPlayer(client)
 
 // Login!
 client.login(client.config.token)
