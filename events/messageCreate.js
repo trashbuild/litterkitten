@@ -23,7 +23,8 @@ module.exports = {
     if (!interaction.content.startsWith(client.config.prefix)) return
     
     // Check that command exists
-    const args = interaction.content.slice(client.config.prefix.length).trim().split(' ')
+    var qual = interaction.content.slice(0,client.config.prefix.length)
+    var args = interaction.content.slice(client.config.prefix.length).trim().split(' ')
     console.log(args)
     console.log(client.commands)
     const command = client.commands.get(args)
