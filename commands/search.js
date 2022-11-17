@@ -15,18 +15,19 @@ module.exports = {
         .setRequired(true)),
 
   async execute(interaction) {
+    interaction.deferReply()
     const client = interaction.client
 
     // Get search terms
     if (interaction.args.length < 1) {
-      return interaction.reply({
+      return interaction.editReply({
         content: `${sounds.confused()} :musical_note:`,
         ephemeral: true
       }).catch(e => { console.log(e) })
     }
-    const name = interaction.args.join(' ')
 
     // Search
+    const name = interaction.args.join(' ')
     const res = await client.player.search(name, {
       requestedBy: interaction.member,
       searchEngine: QueryType.AUTO
@@ -34,7 +35,7 @@ module.exports = {
 
     // Return if no results
     if (!res || !res.tracks.length) {
-      return interaction.reply({
+      return interaction.editReply({
         content: `${sounds.no()} :zero:`,
         ephemeral: true
       }).catch(e => { console.log(e) })
@@ -45,7 +46,7 @@ module.exports = {
       leaveOnEnd: true,
       autoSelfDeaf: true,
       metadata: interaction.channel
-    }).catch(e => { console.log(e) })
+    })
 
     // Create embed
     const maxTracks = res.tracks.slice(0, 10)
@@ -59,7 +60,7 @@ module.exports = {
       ).setTimestamp()
 
     // Reply
-    interaction.reply({ embeds: [embed] })
+    interaction.editReply({ embeds: [embed] })
       .catch(e => { console.log(e) })
 
     // Handle responses using a collector
@@ -73,26 +74,21 @@ module.exports = {
     collector.on('collect', async (query) => {
       // Cancel
       if (query.content.toLowerCase() === 'cancel') {
-        interaction.reply({
-          content: `${sounds.yes()} :white_check_mark:`,
-          ephemeral: true
-        }).catch(e => { console.log(e) })
         collector.stop()
+        query.reply({
+          content: `${sounds.yes()} :white_check_mark:`
+        }).catch(e => { console.log(e) })
       }
       // Ignore invalid answers
       const value = parseInt(query.content)
       if (!value || value <= 0 || value > maxTracks.length) {
-        interaction.reply({
-          content: `${sounds.angy()} :hash::exclamation`,
-          ephemeral: true
+        query.reply({
+          content: `${sounds.angy()} :hash::exclamation`
         }).catch(e => { console.log(e) })
       }
 
       // Confirm valid answer
       collector.stop()
-      await interaction.reply({
-        content: sounds.working()
-      }).catch(e => { console.log(e) })
       // Get queue
       try {
         if (!queue.connection) {
@@ -100,9 +96,8 @@ module.exports = {
         }
       } catch {
         await client.player.deleteQueue(interaction.guild.id)
-        return interaction.reply({
-          content: `${sounds.confused()} :microphone:`,
-          ephemeral: true
+        return query.reply({
+          content: `${sounds.confused()} :microphone:`
         }).catch(e => { console.log(e) })
       }
       // Add track and play
@@ -110,14 +105,14 @@ module.exports = {
       if (!queue.playing) await queue.play()
     })
 
-    // On timeout, complain
-    collector.on('end', (msg, reason) => {
-      if (reason === 'time') {
-        return interaction.reply({
-          content: `${sounds.angy()} :alarm_clock:`,
-          ephemeral: true
-        }).catch(e => { console.log(e) })
-      }
-    })
+    // // On timeout, complain
+    // collector.on('end', (msg, reason) => {
+    //   if (reason === 'time') {
+    //     return interaction.editReply({
+    //       content: `${sounds.angy()} :alarm_clock:`,
+    //       ephemeral: true
+    //     }).catch(e => { console.log(e) })
+    //   }
+    // })
   }
 }

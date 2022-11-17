@@ -22,8 +22,7 @@ module.exports = {
 
     // Reply
     interaction.reply({
-      content: `${sounds.yes()} :white_check_mark:`,
-      ephemeral: true
+      content: `${sounds.yes()} :white_check_mark:`
     }).catch(e => { console.log(e) })
   }
 }
