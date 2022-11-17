@@ -79,7 +79,6 @@ client.player.on('botDisconnect', (queue) => {
 
 client.player.on('channelEmpty', (queue) => {
   console.log('channelEmpty')
-  queue.stop()
   client.user.setActivity('a bug', { type: 'WATCHING' })
 })
 
