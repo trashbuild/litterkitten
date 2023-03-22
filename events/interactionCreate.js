@@ -1,5 +1,6 @@
 const sounds = require('../kitten-sounds.js')
 const { EmbedBuilder } = require('discord.js')
+const { useMasterPlayer } = require('discord-player')
 
 module.exports = {
   execute(interaction) {
@@ -43,10 +44,10 @@ module.exports = {
 
     // Handle buttons
     if (interaction.isButton()) {
-      const queue = client.player.getQueue(interaction.guildId)
+      const player = useMasterPlayer()
       switch (interaction.customId) {
         case 'saveTrack': {
-          if (!queue || !queue.playing) {
+          if (!player || !player.playing) {
             return interaction.reply({
               content: `${sounds.confused()} :question::speaker::question:`,
               ephemeral: true,
@@ -58,11 +59,11 @@ module.exports = {
               .setTitle('Saved track')
               .setThumbnail(client.user.displayAvatarURL())
               .addFields(
-                { name: 'Track', value: `\`${queue.current.title}\`` },
-                { name: 'Duration', value: `\`${queue.current.duration}\`` },
-                { name: 'URL', value: `${queue.current.url}` },
+                { name: 'Track', value: `\`${player.current.title}\`` },
+                { name: 'Duration', value: `\`${player.current.duration}\`` },
+                { name: 'URL', value: `${player.current.url}` },
                 { name: 'Saved Server', value: `\`${interaction.guild.name}\`` },
-                { name: 'Requested By', value: `${queue.current.requestedBy}` }
+                { name: 'Requested By', value: `${player.current.requestedBy}` }
               ).setTimestamp()
             interaction.member.send({ embeds: [embed] }).then(() => {
               return interaction.reply({
@@ -79,15 +80,15 @@ module.exports = {
           break
         }
         case 'time': {
-          if (!queue || !queue.playing) {
+          if (!player || !player.playing) {
             return interaction.reply({
               content: `${sounds.no()} :x::zero::musical_note:`,
               ephemeral: true,
               components: []
             })
           } else {
-            const progress = queue.createProgressBar()
-            const timestamp = queue.getPlayerTimestamp()
+            const progress = player.createProgressBar()
+            const timestamp = player.getPlayerTimestamp()
 
             if (timestamp.progress === 'Infinity') {
               return interaction.message.edit({
@@ -97,7 +98,7 @@ module.exports = {
 
             const embed = new EmbedBuilder()
               .setColor(client.config.color)
-              .setTitle(queue.current.title)
+              .setTitle(player.current.title)
               .setThumbnail(client.user.displayAvatarURL())
               .setTimestamp()
               .setDescription(`${progress} (**${timestamp.progress}**%)`)

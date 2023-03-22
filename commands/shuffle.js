@@ -1,5 +1,6 @@
 const sounds = require('../kitten-sounds.js')
 const { SlashCommandBuilder } = require('discord.js')
+const { useMasterPlayer } = require('discord-player')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -8,9 +9,9 @@ module.exports = {
 
   async execute(interaction) {
     // Get queue
-    const client = interaction.client
-    const queue = client.player.getQueue(interaction.guild.id)
-    if (!queue || !queue.playing) {
+    const player = useMasterPlayer()
+    const queue = player.nodes.get(interaction.guild.id)
+    if (!queue || !queue.tracks) {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true
@@ -18,11 +19,7 @@ module.exports = {
     }
 
     // Shuffle
-    const tracks = queue.tracks
-    for (let i = tracks.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [tracks[i], tracks[j]] = [tracks[j], tracks[i]]
-    }
+    await queue.tracks.shuffle()
 
     // Reply (or don't)
     if (interaction.silent) return

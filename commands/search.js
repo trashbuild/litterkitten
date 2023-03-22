@@ -1,5 +1,5 @@
 const sounds = require('../kitten-sounds.js')
-const { QueryType } = require('discord-player')
+const { QueryType, useMasterPlayer } = require('discord-player')
 const {
   EmbedBuilder,
   SlashCommandBuilder
@@ -27,29 +27,30 @@ module.exports = {
     }
 
     // Search
+    const player = useMasterPlayer()
     const name = interaction.args.join(' ')
-    const res = await client.player.search(name, {
+    const searchResult = await player.search(name, {
       requestedBy: interaction.member,
       searchEngine: QueryType.AUTO
     })
 
     // Return if no results
-    if (!res || !res.tracks.length) {
+    if (!searchResult || !searchResult.tracks.length) {
       return interaction.editReply({
         content: `${sounds.no()} :zero:`,
         ephemeral: true
       }).catch(e => { console.log(e) })
     }
 
-    // Get queue
-    const queue = await client.player.createQueue(interaction.guild, {
-      leaveOnEnd: true,
-      autoSelfDeaf: true,
-      metadata: interaction.channel
-    })
+    // // Get queue
+    // const queue = await player.createQueue(interaction.guild, {
+    //   leaveOnEnd: true,
+    //   autoSelfDeaf: true,
+    //   metadata: interaction.channel
+    // })
 
     // Create embed
-    const maxTracks = res.tracks.slice(0, 10)
+    const maxTracks = searchResult.tracks.slice(0, 10)
     const embed = new EmbedBuilder()
       .setColor(client.config.color)
       .setTitle(name)
@@ -86,23 +87,22 @@ module.exports = {
           content: `${sounds.angy()} :hash::exclamation`
         }).catch(e => { console.log(e) })
       }
-
       // Confirm valid answer
       collector.stop()
       // Get queue
       try {
-        if (!queue.connection) {
-          await queue.connect(interaction.member.voice.channel)
+        if (!player.connection) {
+          await player.connect(interaction.member.voice.channel)
         }
       } catch {
-        await client.player.deleteQueue(interaction.guild.id)
+        await player.deleteQueue(interaction.guild.id)
         return query.reply({
           content: `${sounds.confused()} :microphone:`
         }).catch(e => { console.log(e) })
       }
       // Add track and play
-      queue.addTrack(res.tracks[Number(query.content) - 1])
-      if (!queue.playing) await queue.play()
+      player.addTrack(searchResult.tracks[Number(query.content) - 1])
+      if (!player.playing) await player.play()
     })
 
     // // On timeout, complain

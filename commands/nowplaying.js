@@ -5,6 +5,7 @@ const {
   EmbedBuilder,
   SlashCommandBuilder
 } = require('discord.js')
+const { useMasterPlayer } = require('discord-player')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,18 +13,19 @@ module.exports = {
     .setDescription('Show current track info.'),
 
   async execute(interaction) {
-    const client = interaction.client
     // Verify that a song is playing
-    const queue = client.player.getQueue(interaction.guild.id)
-    if (!queue || !queue.playing) {
+    const player = useMasterPlayer()
+    const queue = player.nodes.get(interaction.guild.id)
+    if (!queue || !queue.node.isPlaying()) {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true
       }).catch(e => { console.log(e) })
     }
-
+    
     // Create embed
-    const track = queue.current
+    const client = interaction.client
+    const track = queue.currentTrack
     const timestamp = queue.getPlayerTimestamp()
     const embed = new EmbedBuilder()
       .setColor(client.config.color)
