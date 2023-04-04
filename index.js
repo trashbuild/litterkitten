@@ -53,71 +53,114 @@ for (const file of eventFiles) {
 }
 
 // Build the music player
-client.player = new Player(client, {
-  voiceConfig: {
-    leaveOnEnd: true,
-    autoSelfDeaf: true
-  },
-  bufferingTimeout: 6000,
-  maxVol: 100,
-  loopMessage: false,
-  discordPlayer: {
-    ytdlOptions: {
-      filter: 'audioonly',
-      quality: 'highestaudio'
-      // highwatermark: 1 << 30
-    }
-  }
-})
+const player = Player.singleton(client //, {
+  // bufferingTimeout: 6000,
+  // maxVol: 100,
+  // loopMessage: false,
+  // discordPlayer: {
+  //   ytdlOptions: {
+  //     filter: 'audioonly',
+  //     quality: 'highestaudio'
+  //     // highwatermark: 1 << 30
+  //   }
+  // }
+//}
+)
 
 // Event handling
-client.player.on('botDisconnect', (queue) => {
-  console.log('botDisconnect')
-  queue.destroy()
-  client.user.setActivity('a bug', { type: 'WATCHING' })
-})
-
-client.player.on('channelEmpty', (queue) => {
-  console.log('channelEmpty')
-  queue.stop()
-  client.user.setActivity('a bug', { type: 'WATCHING' })
-})
-
-client.player.on('connectionError', (queue, error) => {
-  console.log('connectionError')
-  console.log(error)
-  queue.play()
-})
-
-client.player.on('error', (queue, error) => {
-  console.log('error')
-  console.log(error)
-  queue.play()
-})
-
-client.player.on('queueEnd', (queue) => {
-  if (queue.connection) queue.connection.disconnect()
-  client.user.setActivity('a bug', { type: 'WATCHING' })
-})
-
-client.player.on('trackAdd', (queue, track) => {
+player.on('audioTrackAdd', (queue, track) => {
   console.log(`Added: ${track.title}`)
   queue.metadata.send({
     content: `:white_check_mark: ${track.title}`
   }).catch(e => { console.log(e) })
 })
 
-client.player.on('trackStart', (queue, track) => {
+player.on('audioTracksAdd', (queue, tracks) => {
+  console.log(`Added: ${tracks.length} tracks`)
+  queue.metadata.send({
+    content: `:white_check_mark: ${tracks.length} :music_note:`
+  }).catch(e => { console.log(e) })
+})
+
+player.on('audioTrackRemove', (queue, track) => {
+  console.log(`Removed: ${track.title}`)
+  queue.metadata.send({
+    content: `:x: ${track.title}`
+  }).catch(e => { console.log(e) })
+})
+
+player.on('audioTracksRemove', (queue, tracks) => {
+  console.log(`Removed: ${tracks.length} tracks`)
+  queue.metadata.send({
+    content: `:x: ${tracks.length} :music_note:`
+  }).catch(e => { console.log(e) })
+})
+
+player.events.on('connection', (queue) => {
+  console.log('Player connected!')
+})
+
+// player.events.on('debug', (queue, message) => {
+//   console.log(message)
+// })
+
+player.events.on('disconnect', (queue) => {
+  console.log('Player disconnected.')
+  queue.delete()
+  client.user.setActivity('a bug', { type: 'WATCHING' })
+})
+
+player.events.on('emptyChannel', (queue) => {
+  console.log('Voice channel empty.')
+  client.user.setActivity('a bug', { type: 'WATCHING' })
+})
+
+player.events.on('emptyQueue', (queue) => {
+  console.log('Queue empty.')
+  client.user.setActivity('a bug', { type: 'WATCHING' })
+})
+
+player.events.on('error', (queue, error) => {
+  console.log('Error!')
+  console.log(error)
+  // queue.play()
+})
+
+player.events.on('playerError', (queue, error, track) => {
+  console.log(`playerError! Track: ${track.title}`)
+  console.log(error)
+  // queue.play()
+})
+
+player.events.on('playerFinish', (queue, track) => {
+  console.log(`Finished track: ${track.title}`)
+})
+
+player.events.on('playerSkip', (queue, track) => {
+  console.log(`Skipped track: ${track.title}`)
+})
+
+player.events.on('playerStart', (queue, track) => {
+  // Report track start
   console.log(`Playing: ${track.title}`)
   queue.metadata.send({
     content: `:musical_note: ${track.title}`
   }).catch(e => { console.log(e) })
+  // Set bot activity
   client.user.setActivity(track.title, {
     name: track.title,
     type: 'STREAMING',
     url: track.url
   })
 })
+
+// player.events.on('playerTrigger', (queue, track, reason) => {
+//   console.log(`Player triggered! Track: ${track.title}, Reason: ${reason}`)
+// })
+
+// player.events.on('voiceStateUpdate', (queue, oldState, newState) => {
+//   console.log(`voiceStateUpdate: oldState ${oldState}, newState ${newState}`)
+// })
 
 // Login!
 client.login(client.config.token)

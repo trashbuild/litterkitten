@@ -14,8 +14,6 @@ module.exports = {
       .then(setTimeout(() => {
         interaction.silent = true
         client.commands.get('shuffle').execute(interaction)
-        interaction.args = [25]
-        client.commands.get('volume').execute(interaction)
       }, 6000))
   }
 }

@@ -3,6 +3,7 @@ const {
   EmbedBuilder,
   SlashCommandBuilder
 } = require('discord.js')
+const { useMasterPlayer } = require('discord-player')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -12,8 +13,9 @@ module.exports = {
   async execute(interaction) {
     // Get queue
     const client = interaction.client
-    const queue = client.player.getQueue(interaction.guild.id)
-    if (!queue || !queue.playing) {
+    const player = useMasterPlayer()
+    const queue = player.nodes.get(interaction.guild.id)
+    if (!queue || !queue.node.isPlaying()) {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true
@@ -21,7 +23,7 @@ module.exports = {
     }
 
     // Return if no music
-    if (!queue.tracks[0]) {
+    if (!queue.tracks.size) {
       return interaction.reply({
         content: `${sounds.no()} :zero:`,
         ephemeral: true
@@ -32,14 +34,14 @@ module.exports = {
     const tracks = queue.tracks.map(
       (track, i) => `**${i + 1}** - ${track.title} | ${track.author}`
     )
-    const n = queue.tracks.length
+    const n = queue.tracks.size
     const nextSongs = n > 5 ? `+ **${n - 5}**` : `**${n}**`
     const embed = new EmbedBuilder()
       .setColor(client.config.color)
-      .setThumbnail(queue.current.thumbnail)
+      .setThumbnail(queue.currentTrack.thumbnail)
       .setTitle('Playlist')
       .setDescription(
-        `Currently Playing: \`${queue.current.title}\`\n
+        `Currently Playing: \`${queue.currentTrack.title}\`\n
         ${tracks.slice(0, 5).join('\n')}\n\n${nextSongs}`
       )
       .setTimestamp()

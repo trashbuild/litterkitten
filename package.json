@@ -1,11 +1,10 @@
 {
   "dependencies": {
-    "discord-player": "^5.3.1",
-    "discord.js": "^14.3.0",
-    "ffmpeg-static": "^5.1.0",
-    "nodemon": "^2.0.16",
+    "discord-player": "^6.1.1",
+    "discord.js": "^14.8.0",
+    "nodemon": "^2.0.21",
     "opusscript": "^0.0.8",
-    "play-dl": "^1.9.5",
+    "play-dl": "^1.9.6",
     "ytdl": "^1.4.1"
   },
   "main": "index.js",
@@ -13,11 +12,11 @@
     "dev": "npx nodemon index.js"
   },
   "devDependencies": {
-    "eslint": "^8.15.0",
+    "eslint": "^8.36.0",
     "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.0",
-    "eslint-plugin-promise": "^6.0.0"
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-promise": "^6.1.1"
   },
   "engines": {
     "node": ">=18"
