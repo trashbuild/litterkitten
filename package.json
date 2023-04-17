@@ -1,11 +1,12 @@
 {
   "dependencies": {
     "discord-player": "^6.1.1",
-    "discord.js": "^14.8.0",
+    "discord.js": "^14.9.0",
     "nodemon": "^2.0.21",
     "opusscript": "^0.0.8",
     "play-dl": "^1.9.6",
-    "ytdl": "^1.4.1"
+    "ytdl": "^1.4.1",
+    "ytdl-core": "^4.11.4"
   },
   "main": "index.js",
   "scripts": {
