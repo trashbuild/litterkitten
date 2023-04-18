@@ -35,7 +35,7 @@ module.exports = {
     if (queue.volume === vol) return
 
     // Try to set volume
-    const success = queue.setVolume(vol)
+    const success = queue.node.setVolume(vol)
 
     // Reply
     if (interaction.silent) return

@@ -69,7 +69,7 @@ module.exports = {
     await player.play(channel, searchResult, {
       nodeOptions: {
         metadata: interaction.channel,
-        volume: 12,
+        volume: 6,
         leaveOnEmpty: true,
         leaveOnEmptyCooldown: 300000,
         leaveOnEnd: true,

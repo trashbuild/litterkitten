@@ -12,6 +12,7 @@ module.exports = {
     const player = useMasterPlayer()
     const queue = player.nodes.get(interaction.guild.id)
     if (!queue || !queue.tracks) {
+      if (interaction.silent) return
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true

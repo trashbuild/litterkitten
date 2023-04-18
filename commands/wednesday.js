@@ -10,10 +10,8 @@ module.exports = {
     const client = interaction.client
     interaction.args = [client.config.wednesday]
     // Play, then shuffle and set volume after timeout
-    client.commands.get('play').execute(interaction)
-      .then(setTimeout(() => {
-        interaction.silent = true
-        client.commands.get('shuffle').execute(interaction)
-      }, 6000))
+    await client.commands.get('play').execute(interaction)
+    interaction.silent = true
+    await client.commands.get('shuffle').execute(interaction)
   }
 }
