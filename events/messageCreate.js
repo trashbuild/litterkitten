@@ -39,12 +39,12 @@ module.exports = {
           interaction.react('🗻')
           break
         // iambic pentameter
-        case 'blank verse':
+        // case 'blank verse':
         case 'heroic couplets':
-        case 'alternate rhhyme':
+        case 'alternate rhyme':
         case 'Shakespearean sonnet':
         case 'sonnet with unusual meter':
-          interaction.react('🧐')
+          interaction.react('💀')
           break
         case 'limerick':
           interaction.react('🍀')
