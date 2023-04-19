@@ -9,7 +9,7 @@ module.exports = {
     // Load Wednesday playlist from config file
     const client = interaction.client
     interaction.args = [client.config.wednesday]
-    // Play, then shuffle and set volume after timeout
+    // Play and shuffle
     await client.commands.get('play').execute(interaction)
     interaction.silent = true
     await client.commands.get('shuffle').execute(interaction)

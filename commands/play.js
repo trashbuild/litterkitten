@@ -1,9 +1,6 @@
 const sounds = require('../kitten-sounds.js')
-// const { QueryType } = require('discord-player')
 const { SlashCommandBuilder } = require('discord.js')
 const { useMasterPlayer } = require('discord-player')
-// Fix "cannot play resource that has already ended"
-// const playdl = require('play-dl')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -54,7 +51,7 @@ module.exports = {
     const player = useMasterPlayer()
     const searchResult = await player.search(
       interaction.args.join(' '),
-      { requestedBy: interaction.member } // , searchEngine: QueryType.AUTO }
+      { requestedBy: interaction.member }
     )
 
     // Verify search result
