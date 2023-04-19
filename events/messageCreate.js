@@ -12,6 +12,57 @@ module.exports = {
     // Ignore bots (including self)
     if (interaction.author.bot) return
 
+    // Check for poetry
+    fetch(client.config.poeit, {
+        method: 'POST',
+        headers: {
+            Accept: 'application.json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            message: interaction.content
+        })
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data)
+      switch (data.form) {
+        case 'unknown form':
+          break
+        case 'ballad stanza':
+          interaction.react('🎵')
+          break
+        case 'cinquain':
+          interaction.react('🖐️')
+          break
+        case 'haiku':
+        case 'tanka':
+          interaction.react('🗻')
+          break
+        // iambic pentameter
+        case 'blank verse':
+        case 'heroic couplets':
+        case 'alternate rhhyme':
+        case 'Shakespearean sonnet':
+        case 'sonnet with unusual meter':
+          interaction.react('🧐')
+          break
+        case 'limerick':
+          interaction.react('🍀')
+          break
+        case 'ottava rima':
+          interaction.react('🍝')
+          break
+        case 'rondeau':
+          interaction.react('🥐')
+          break
+        case 'tetractys':
+          interaction.react('🔺')
+          break
+      }
+    })
+    .catch(e => console.log(e))
+
     // // Handle DMs
     // if (int.channel.type === 'DM') {
     //   console.log(int.content)
