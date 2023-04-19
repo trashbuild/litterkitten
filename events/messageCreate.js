@@ -25,7 +25,6 @@ module.exports = {
     })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
       switch (data.form) {
         case 'unknown form':
           break
