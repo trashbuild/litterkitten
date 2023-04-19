@@ -88,7 +88,7 @@ module.exports = {
 
   async execute(interaction) {
     // Tell Discord we're working on it
-    interaction.deferReply()
+    await interaction.deferReply()
 
     // Set request url based on whether search terms are given or not
     const urlBase = 'https://www.thecocktaildb.com/api/json/v1/1/'

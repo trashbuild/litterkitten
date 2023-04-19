@@ -15,7 +15,7 @@ module.exports = {
         .setRequired(true)),
 
   async execute(interaction) {
-    interaction.deferReply()
+    await interaction.deferReply()
     const client = interaction.client
 
     // Get search terms

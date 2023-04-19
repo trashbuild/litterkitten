@@ -1,10 +1,14 @@
-const { SlashCommandBuilder } = require('discord.js')
+const { 
+  EmbedBuilder,
+  SlashCommandBuilder 
+} = require('discord.js')
+const sounds = require('../kitten-sounds.js')
 
 async function sendAnalysis(interaction, data) {
   // Create embed from response data
   const embed = new EmbedBuilder()
     .setTitle("Poe'd it.")
-    .setDescription(interaction.content)
+    .setDescription(interaction.args.join(' '))
     .addFields(
         { name: 'Form', value: data.form },
         { name: 'Lines', value: data.lines.toString() },
@@ -12,7 +16,7 @@ async function sendAnalysis(interaction, data) {
         { name: 'Rhyme scheme', value: data.rhyme_scheme },
         { name: 'Rhyme type', value: data.rhyme_type },
         { name: 'Stanza', value: data.stanza },
-        { name: 'Stanza lengths', value: data.stanza_lengths },
+        { name: 'Stanza lengths', value: data.lengths },
         { name: 'Stress pattern', value: data.stress.toString() },
         { name: 'Syllables', value: data.syllables.toString() }
     )
@@ -24,25 +28,33 @@ async function sendAnalysis(interaction, data) {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('poeit')
-    .setDescription('Analyze a message to guess its poetic form.'),
+    .setDescription('Analyze a message to guess its poetic form.')
+    .addStringOption(option =>
+      option.setName('poem')
+        .setDescription('Poem or phrase to analyze.')
+        .setRequired(true)),
 
   async execute(interaction) {
     // Acknowledge message received
-    interaction.deferReply()
+    await interaction.deferReply()
     // Get poem analysis
-    fetch(client.config.poeit, {
+    fetch(interaction.client.config.poeit, {
         method: 'POST',
         headers: {
             Accept: 'application.json',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            message: interaction.content
+            message: interaction.args.join(' ')
         })
     })
     // Send analysis results
     .then((response) => response.json())
     .then((data) => sendAnalysis(interaction, data))
-    .catch(e => console.log(e))
+    // Handle errors
+    .catch((e) => {
+      interaction.editReply(sounds.confused())
+      console.log(e)
+    })
   }
 }

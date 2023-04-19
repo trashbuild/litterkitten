@@ -2,17 +2,16 @@ const sounds = require('../kitten-sounds.js')
 
 module.exports = {
   execute(interaction) {
-    const client = interaction.client
-
     // First and foremost, acknowledge the funny number
     if (interaction.content.includes('69')) {
       interaction.react('<:NICE:466837748263682059>')
     }
-
+    
     // Ignore bots (including self)
     if (interaction.author.bot) return
-
+    
     // Check for poetry
+    const client = interaction.client
     fetch(client.config.poeit, {
         method: 'POST',
         headers: {
