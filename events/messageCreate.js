@@ -13,14 +13,14 @@ module.exports = {
     // Check for poetry
     const client = interaction.client
     fetch(client.config.poeit, {
-        method: 'POST',
-        headers: {
-            Accept: 'application.json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            message: interaction.content
-        })
+      method: 'POST',
+      headers: {
+          Accept: 'application.json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+          message: interaction.content
+      })
     })
     .then((response) => response.json())
     .then((data) => {
