@@ -1,59 +1,85 @@
 const { 
+  ActionRowBuilder,
   EmbedBuilder,
-  SlashCommandBuilder 
+  Events,
+  ModalBuilder,
+  SlashCommandBuilder,
+  TextInputBuilder,
+  TextInputStyle
 } = require('discord.js')
 const sounds = require('../kitten-sounds.js')
 
-async function sendAnalysis(interaction, data) {
-  // Create embed from response data
-  const embed = new EmbedBuilder()
-    .setDescription(interaction.args.join(' '))
+async function handlePoem(interaction) {
+  // Get poem input
+  await interaction.deferReply()
+  const poem = interaction.fields.getTextInputValue('poeitInput')
+  
+  // Get analysis
+  fetch(interaction.client.config.poeit, {
+    method: 'POST',
+    headers: {
+        Accept: 'application.json',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        message: poem
+    })
+  })
+
+  // Parse result
+  .then((response) => response.json())
+  .then((data) => {
+    
+    // Create embed from response data
+    const embed = new EmbedBuilder()
+    .setTitle('🤓')
+    .setDescription(poem)
     .addFields(
-      { name: 'Form', value: data.form },
-      { name: 'Lines', value: data.lines.toString() },
-      { name: 'Meter', value: data.meter },
-      { name: 'Rhyme scheme', value: data.rhyme_scheme },
-      { name: 'Rhyme type', value: data.rhyme_type },
-      { name: 'Stanza form', value: data.stanza },
-      { name: 'Stanza lengths', value: data.lengths },
-      { name: 'Stress pattern', value: data.stress.toString() },
-      { name: 'Syllables', value: data.syllables.toString() }
+      { name: 'Form', value: data.form, inline: true },
+      { name: 'Meter', value: data.meter, inline: true },
+      { name: 'Rhyme scheme', value: data.rhyme_scheme, inline:true },
+      { name: 'Rhyme type', value: data.rhyme_type, inline: true },
+      { name: 'Stanza form', value: data.stanza, inline: true},
+      { name: 'Stanza lengths', value: data.lengths, inline: true },
+      { name: 'Syllables', value: data.syllables.toString().replaceAll(',', '\n'), inline: true },
+      { name: 'Stress pattern', value: data.stress.toString().replaceAll(',', '\n'), inline: true },
+      { name: 'Lines', value: data.lines.toString(), inline: true }
     )
-  // Edit embed into reply
-  return interaction.editReply({ embeds: [embed] })
-    .catch(e => { console.log(e) })
+    
+    // Edit embed into reply
+    interaction.editReply({ embeds: [embed] })
+    })
+  
+    // Handle errors
+  .catch((e) => {
+    interaction.editReply(sounds.confused())
+    console.log(e)
+  })
 }
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('poeit')
-    .setDescription('Analyze a message to guess its poetic form.')
-    .addStringOption(option =>
-      option.setName('poem')
-        .setDescription('Poem or phrase to analyze.')
-        .setRequired(true)),
+    .setDescription('Analyze a message to guess its poetic form.'),
 
   async execute(interaction) {
-    // Acknowledge message received
-    await interaction.deferReply()
-    // Get poem analysis
-    fetch(interaction.client.config.poeit, {
-      method: 'POST',
-      headers: {
-          Accept: 'application.json',
-          'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-          message: interaction.args.join(' ')
-      })
-    })
-    // Send analysis results
-    .then((response) => response.json())
-    .then((data) => sendAnalysis(interaction, data))
-    // Handle errors
-    .catch((e) => {
-      interaction.editReply(sounds.confused())
-      console.log(e)
-    })
+    // Get poem via modal input form
+    const poemInput = new TextInputBuilder()
+      .setCustomId('poeitInput')
+      .setLabel('✏️')
+      .setStyle(TextInputStyle.Paragraph)
+      .setRequired(true)
+    const poemInputRow = new ActionRowBuilder().addComponents(poemInput)
+    const modal = new ModalBuilder()
+      .setCustomId('poeitForm')
+      .setTitle('Poeit')
+      .addComponents(poemInputRow)
+    await interaction.showModal(modal)
+
+    // Handle response
+    const poeitFilter = i => i.customId === 'poeitForm'
+    interaction.awaitModalSubmit({ poeitFilter, time: 300_000 })
+      .then((poemInteraction) => handlePoem(poemInteraction))
+      .catch((e) => console.log(e))
   }
 }
