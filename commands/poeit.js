@@ -1,7 +1,6 @@
 const { 
   ActionRowBuilder,
   EmbedBuilder,
-  Events,
   ModalBuilder,
   SlashCommandBuilder,
   TextInputBuilder,
