@@ -94,7 +94,7 @@ player.events.on('connection', (queue) => {
 
 player.events.on('disconnect', (queue) => {
   console.log('Player disconnected.')
-  queue.delete()
+  // queue.delete()
   client.user.setActivity('a bug', { type: 'WATCHING' })
 })
 

@@ -43,10 +43,8 @@ module.exports = {
     }
 
     // Send "working" message
-    await interaction.deferReply({
-      content: sounds.working(),
-      ephemeral: true
-    }).catch(e => { console.log(e) })
+    await interaction.deferReply({ ephemeral: true })
+      .catch(e => { console.log(e) })
 
     // If args given, search for those terms
     const searchResult = await player.search(
@@ -66,7 +64,7 @@ module.exports = {
     await player.play(channel, searchResult, {
       nodeOptions: {
         metadata: interaction.channel,
-        volume: 6,
+        volume: 5,
         leaveOnEmpty: true,
         leaveOnEmptyCooldown: 300000,
         leaveOnEnd: true,
