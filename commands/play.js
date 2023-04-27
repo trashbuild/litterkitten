@@ -20,7 +20,7 @@ module.exports = {
         ephemeral: true
       }).catch(e => { console.log(e) })
     }
-    
+
     // Verify voice channel
     const channel = interaction.member.voice.channel
     if (!channel) {
@@ -31,6 +31,7 @@ module.exports = {
     }
 
     // If no args given, just try to resume playback
+    const player = useMasterPlayer()
     if (interaction.args.length === 0) {
       if (player && !player.playing) {
         await player.play()
@@ -48,7 +49,6 @@ module.exports = {
     }).catch(e => { console.log(e) })
 
     // If args given, search for those terms
-    const player = useMasterPlayer()
     const searchResult = await player.search(
       interaction.args.join(' '),
       { requestedBy: interaction.member }

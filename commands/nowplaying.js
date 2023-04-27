@@ -22,7 +22,7 @@ module.exports = {
         ephemeral: true
       }).catch(e => { console.log(e) })
     }
-    
+
     // Create embed
     const client = interaction.client
     const track = queue.currentTrack

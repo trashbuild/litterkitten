@@ -3,7 +3,6 @@ const path = require('node:path')
 const { REST, Routes } = require('discord.js')
 const {
   clientId,
-  // guildId,
   token
 } = require('./config.json')
 

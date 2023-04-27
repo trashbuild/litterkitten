@@ -53,19 +53,7 @@ for (const file of eventFiles) {
 }
 
 // Build the music player
-const player = Player.singleton(client //, {
-  // bufferingTimeout: 6000,
-  // maxVol: 100,
-  // loopMessage: false,
-  // discordPlayer: {
-  //   ytdlOptions: {
-  //     filter: 'audioonly',
-  //     quality: 'highestaudio'
-  //     // highwatermark: 1 << 30
-  //   }
-  // }
-//}
-)
+const player = Player.singleton(client)
 
 // Event handling
 player.on('audioTrackAdd', (queue, track) => {

@@ -9,7 +9,6 @@ module.exports = {
 
   async execute(interaction) {
     // Get queue
-    const client = interaction.client
     const player = useMasterPlayer()
     const queue = player.nodes.get(interaction.guild.id)
     if (!queue || !queue.node.isPlaying()) {
