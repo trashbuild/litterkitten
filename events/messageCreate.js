@@ -7,6 +7,11 @@ module.exports = {
       interaction.react('<:NICE:466837748263682059>')
     }
 
+    // Respond if pinged
+    if (interaction.mentions.has(interaction.client.user.id)) {
+      interaction.channel.send(sounds.yes())
+    }
+
     // Ignore bots (including self)
     if (interaction.author.bot) return
 
