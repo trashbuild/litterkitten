@@ -9,9 +9,14 @@ const {
 const sounds = require('../kitten-sounds.js')
 
 async function handlePoem(interaction) {
-  // Get poem input
   await interaction.deferReply()
+  
+  // Get and verify poem input
   const poem = interaction.fields.getTextInputValue('poeitInput')
+  if (poem == '') {
+    interaction.editReply(sounds.confused())
+    return
+  }
 
   // Get analysis
   fetch(interaction.client.config.poeit, {
@@ -35,12 +40,16 @@ async function handlePoem(interaction) {
         .addFields(
           { name: 'Form', value: data.form, inline: true },
           { name: 'Meter', value: data.meter, inline: true },
-          { name: 'Rhyme scheme', value: data.rhyme_scheme, inline: true },
           { name: 'Rhyme type', value: data.rhyme_type, inline: true },
-          { name: 'Stanza form', value: data.stanza, inline: true },
+          { name: 'Rhyme scheme', value: data.rhyme_scheme, inline: true },
+          { name: 'Stanza type', value: data.stanza, inline: true },
           { name: 'Stanza lengths', value: data.lengths, inline: true },
-          { name: 'Syllables', value: data.syllables.toString().replaceAll(',', '\n'), inline: true },
-          { name: 'Stress pattern', value: data.stress.toString().replaceAll(',', '\n'), inline: true },
+          { name: 'Syllables', 
+            value: data.syllables.toString().replaceAll(',', '\n'), 
+            inline: true },
+          { name: 'Stress pattern', 
+            value: data.stress.toString().replaceAll(',', '\n'), 
+            inline: true },
           { name: 'Lines', value: data.lines.toString(), inline: true }
         )
 
