@@ -55,6 +55,7 @@ for (const file of eventFiles) {
 
 // Build the music player
 const player = Player.singleton(client)
+player.extractors.loadDefault()
 
 // Event handling
 player.on('audioTrackAdd', (queue, track) => {
