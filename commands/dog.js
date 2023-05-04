@@ -4,7 +4,7 @@ const discord = require('discord.js')
 module.exports = {
     data: new discord.SlashCommandBuilder()
       .setName('dog')
-      .setDescription(':dog:'),
+      .setDescription('Woof!'),
 
     async execute(interaction) {
       await interaction.deferReply()
