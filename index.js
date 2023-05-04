@@ -4,6 +4,7 @@ const path = require('node:path')
 
 // Discord imports
 const {
+  ActivityType,
   Client,
   Collection,
   GatewayIntentBits,
@@ -94,30 +95,30 @@ player.events.on('connection', (queue) => {
 
 player.events.on('disconnect', (queue) => {
   console.log('Player disconnected.')
-  // queue.delete()
-  client.user.setActivity('a bug', { type: 'WATCHING' })
+  client.user.setPresence({
+    activities: [{ 
+      name: 'a bug', 
+      type: ActivityType.Watching, 
+      url: null }]
+  })
 })
 
 player.events.on('emptyChannel', (queue) => {
   console.log('Voice channel empty.')
-  client.user.setActivity('a bug', { type: 'WATCHING' })
 })
 
 player.events.on('emptyQueue', (queue) => {
   console.log('Queue empty.')
-  client.user.setActivity('a bug', { type: 'WATCHING' })
 })
 
 player.events.on('error', (queue, error) => {
   console.log('Error!')
   console.log(error)
-  // queue.play()
 })
 
 player.events.on('playerError', (queue, error, track) => {
   console.log(`playerError! Track: ${track.title}`)
   console.log(error)
-  // queue.play()
 })
 
 player.events.on('playerFinish', (queue, track) => {
@@ -136,10 +137,11 @@ player.events.on('playerStart', (queue, track) => {
     ephemeral: 'true'
   }).catch(e => { console.log(e) })
   // Set bot activity
-  client.user.setActivity(track.title, {
-    name: track.title,
-    type: 'STREAMING',
-    url: track.url
+  client.user.setPresence({
+    activities: [{ 
+      name: track.title, 
+      type: ActivityType.Listening, 
+      url: track.url }]
   })
 })
 
