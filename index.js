@@ -132,7 +132,8 @@ player.events.on('playerStart', (queue, track) => {
   // Report track start
   console.log(`Playing: ${track.title}`)
   queue.metadata.send({
-    content: `:musical_note: ${track.title}`
+    content: `:musical_note: ${track.title}`,
+    ephemeral: 'true'
   }).catch(e => { console.log(e) })
   // Set bot activity
   client.user.setActivity(track.title, {
