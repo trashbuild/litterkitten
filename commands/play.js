@@ -75,6 +75,5 @@ module.exports = {
     await interaction.editReply({
       content: `${sounds.yes()}:white_check_mark:`
     })
-    // }
   }
 }

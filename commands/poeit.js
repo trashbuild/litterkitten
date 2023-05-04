@@ -10,10 +10,10 @@ const sounds = require('../kitten-sounds.js')
 
 async function handlePoem(interaction) {
   await interaction.deferReply()
-  
+
   // Get and verify poem input
   const poem = interaction.fields.getTextInputValue('poeitInput')
-  if (poem == '') {
+  if (poem === '') {
     interaction.editReply(sounds.confused())
     return
   }
@@ -44,12 +44,16 @@ async function handlePoem(interaction) {
           { name: 'Rhyme scheme', value: data.rhyme_scheme, inline: true },
           { name: 'Stanza type', value: data.stanza, inline: true },
           { name: 'Stanza lengths', value: data.lengths, inline: true },
-          { name: 'Syllables', 
-            value: data.syllables.toString().replaceAll(',', '\n'), 
-            inline: true },
-          { name: 'Stress pattern', 
-            value: data.stress.toString().replaceAll(',', '\n'), 
-            inline: true },
+          {
+            name: 'Syllables',
+            value: data.syllables.toString().replaceAll(',', '\n'),
+            inline: true
+          },
+          {
+            name: 'Stress pattern',
+            value: data.stress.toString().replaceAll(',', '\n'),
+            inline: true
+          },
           { name: 'Lines', value: data.lines.toString(), inline: true }
         )
 
@@ -70,6 +74,8 @@ module.exports = {
     .setDescription('Analyze a message to guess its poetic form.'),
 
   async execute(interaction) {
+    if (~interaction.client.config.poeit) return
+
     // Get poem via modal input form
     const poemInput = new TextInputBuilder()
       .setCustomId('poeitInput')

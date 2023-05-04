@@ -96,10 +96,11 @@ player.events.on('connection', (queue) => {
 player.events.on('disconnect', (queue) => {
   console.log('Player disconnected.')
   client.user.setPresence({
-    activities: [{ 
-      name: 'a bug', 
-      type: ActivityType.Watching, 
-      url: null }]
+    activities: [{
+      name: 'a bug',
+      type: ActivityType.Watching,
+      url: null
+    }]
   })
 })
 
@@ -138,10 +139,11 @@ player.events.on('playerStart', (queue, track) => {
   }).catch(e => { console.log(e) })
   // Set bot activity
   client.user.setPresence({
-    activities: [{ 
-      name: track.title, 
-      type: ActivityType.Listening, 
-      url: track.url }]
+    activities: [{
+      name: track.title,
+      type: ActivityType.Listening,
+      url: track.url
+    }]
   })
 })
 
