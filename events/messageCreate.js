@@ -72,24 +72,24 @@ module.exports = {
     //   int.reply('Hello!')
     // }
 
-    // Parse arguments and check for prefix
-    const args = interaction.content.split(' ')
-    if (args.shift() !== client.config.prefix) return
+    // // Parse arguments and check for prefix
+    // const args = interaction.content.split(' ')
+    // if (args.shift() !== client.config.prefix) return
 
-    // Check that command exists
-    const command = client.commands.get(args.shift())
-    if (!command) {
-      return interaction.reply({
-        content: sounds.confused(),
-        ephemeral: true
-      })
-    }
+    // // Check that command exists
+    // const command = client.commands.get(args.shift())
+    // if (!command) {
+    //   return interaction.reply({
+    //     content: sounds.confused(),
+    //     ephemeral: true
+    //   })
+    // }
 
-    // Trigger command directly
-    interaction.args = args
-    interaction.silent = false
-    interaction.user = interaction.author
-    console.log(`Running message command: ${command.name} ${args.join(' ')}`)
-    command.execute(interaction)
+    // // Trigger command directly
+    // interaction.args = args
+    // interaction.silent = false
+    // interaction.user = interaction.author
+    // console.log(`Running message command: ${command.name} ${args.join(' ')}`)
+    // command.execute(interaction)
   }
 }
