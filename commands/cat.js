@@ -11,10 +11,10 @@ module.exports = {
       const res = await fetch('https://api.thecatapi.com/v1/images/search', {
         headers: {'x-api-key': interaction.client.config.cat_key}
       })
-      const data = (await res.json())[0]    // always gives a list
+      const image = (await res.json())[0].url
       const embed = new discord.EmbedBuilder()
         .setTitle(':cat:')
-        .setImage(data.url)
+        .setImage(image)
         .setColor(interaction.client.config.color)
       interaction.editReply({ embeds: [embed] })
     }
