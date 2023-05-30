@@ -7,8 +7,8 @@ module.exports = {
     client.user.setPresence({
       activities: [{ 
         name: 'a bug', 
-        type: discord.ActivityType.Watching, 
-        url: null }]
+        type: discord.ActivityType.Watching
+      }]
     })
   }
 }
