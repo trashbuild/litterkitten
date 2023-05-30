@@ -59,31 +59,31 @@ player.extractors.loadDefault()
 
 // Event handling
 player.on('audioTrackAdd', (queue, track) => {
-  console.log(`Added: ${track.title}`)
   queue.metadata.send({
     content: `:white_check_mark: ${track.title}`
   }).catch(e => { console.log(e) })
+  console.log(`Added: ${track.title}`)
 })
 
 player.on('audioTracksAdd', (queue, tracks) => {
-  console.log(`Added: ${tracks.length} tracks`)
   queue.metadata.send({
     content: `:white_check_mark: ${tracks.length} :music_note:`
   }).catch(e => { console.log(e) })
+  console.log(`Added: ${tracks.length} tracks`)
 })
 
 player.on('audioTrackRemove', (queue, track) => {
-  console.log(`Removed: ${track.title}`)
   queue.metadata.send({
     content: `:x: ${track.title}`
   }).catch(e => { console.log(e) })
+  console.log(`Removed: ${track.title}`)
 })
 
 player.on('audioTracksRemove', (queue, tracks) => {
-  console.log(`Removed: ${tracks.length} tracks`)
   queue.metadata.send({
     content: `:x: ${tracks.length} :music_note:`
   }).catch(e => { console.log(e) })
+  console.log(`Removed: ${tracks.length} tracks`)
 })
 
 player.events.on('connection', (queue) => {
@@ -95,14 +95,13 @@ player.events.on('connection', (queue) => {
 // })
 
 player.events.on('disconnect', (queue) => {
-  console.log('Player disconnected.')
   client.user.setPresence({
     activities: [{
       name: 'a bug',
-      type: ActivityType.Watching,
-      url: null
+      type: ActivityType.Watching
     }]
   })
+  console.log('Player disconnected.')
 })
 
 player.events.on('emptyChannel', (queue) => {
@@ -110,6 +109,12 @@ player.events.on('emptyChannel', (queue) => {
 })
 
 player.events.on('emptyQueue', (queue) => {
+  client.user.setPresence({
+    activities: [{
+      name: 'you, unblinkingly',
+      type: ActivityType.Watching
+    }]
+  })
   console.log('Queue empty.')
 })
 
@@ -133,7 +138,6 @@ player.events.on('playerSkip', (queue, track) => {
 
 player.events.on('playerStart', (queue, track) => {
   // Report track start
-  console.log(`Playing: ${track.title}`)
   queue.metadata.send({
     content: `:musical_note: ${track.title}`,
     ephemeral: 'true'
@@ -146,6 +150,7 @@ player.events.on('playerStart', (queue, track) => {
       url: track.url
     }]
   })
+  console.log(`Playing: ${track.title}`)
 })
 
 // player.events.on('playerTrigger', (queue, track, reason) => {
