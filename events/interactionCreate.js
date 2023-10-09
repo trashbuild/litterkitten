@@ -1,6 +1,6 @@
 const sounds = require('../kitten-sounds.js')
 const { EmbedBuilder } = require('discord.js')
-const { useMasterPlayer } = require('discord-player')
+const { useMainPlayer } = require('discord-player')
 
 module.exports = {
   execute(interaction) {
@@ -44,7 +44,7 @@ module.exports = {
 
     // Handle buttons
     if (interaction.isButton()) {
-      const player = useMasterPlayer()
+      const player = useMainPlayer()
       switch (interaction.customId) {
         case 'saveTrack': {
           if (!player || !player.playing) {

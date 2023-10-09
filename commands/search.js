@@ -1,5 +1,5 @@
 const sounds = require('../kitten-sounds.js')
-const { QueryType, useMasterPlayer } = require('discord-player')
+const { QueryType, useMainPlayer } = require('discord-player')
 const {
   EmbedBuilder,
   SlashCommandBuilder
@@ -27,7 +27,7 @@ module.exports = {
     }
 
     // Search
-    const player = useMasterPlayer()
+    const player = useMainPlayer()
     const name = interaction.args.join(' ')
     const searchResult = await player.search(name, {
       requestedBy: interaction.member,

@@ -1,6 +1,6 @@
 const sounds = require('../kitten-sounds.js')
 const { SlashCommandBuilder } = require('discord.js')
-const { useMasterPlayer } = require('discord-player')
+const { useMainPlayer } = require('discord-player')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -31,7 +31,7 @@ module.exports = {
     }
 
     // If no args given, just try to resume playback
-    const player = useMasterPlayer()
+    const player = useMainPlayer()
     if (interaction.args.length === 0) {
       if (player && !player.playing) {
         await player.play()

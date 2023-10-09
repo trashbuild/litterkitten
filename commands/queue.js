@@ -3,7 +3,7 @@ const {
   EmbedBuilder,
   SlashCommandBuilder
 } = require('discord.js')
-const { useMasterPlayer } = require('discord-player')
+const { useMainPlayer } = require('discord-player')
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -13,7 +13,7 @@ module.exports = {
   async execute(interaction) {
     // Get queue
     const client = interaction.client
-    const player = useMasterPlayer()
+    const player = useMainPlayer()
     const queue = player.nodes.get(interaction.guild.id)
     if (!queue || !queue.node.isPlaying()) {
       return interaction.reply({
