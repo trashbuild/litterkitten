@@ -35,6 +35,7 @@ module.exports = {
     if (queue.volume === vol) return
 
     // Try to set volume
+    // console.log(`Setting volume to ${vol}...`)
     const success = queue.node.setVolume(vol)
 
     // Reply

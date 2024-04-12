@@ -91,7 +91,7 @@ player.events.on('connection', (queue) => {
 })
 
 // player.events.on('debug', (queue, message) => {
-//   console.log(message)
+//   console.log('\n', message)
 // })
 
 player.events.on('disconnect', (queue) => {
@@ -119,13 +119,11 @@ player.events.on('emptyQueue', (queue) => {
 })
 
 player.events.on('error', (queue, error) => {
-  console.log('Error!')
-  console.log(error)
+  console.error('Error:', error.message, 'with track', error.resource.metadata.title)
 })
 
 player.events.on('playerError', (queue, error, track) => {
-  console.log(`playerError! Track: ${track.title}`)
-  console.log(error)
+  console.error('playerError:', error.message, 'with track', track.title)
 })
 
 player.events.on('playerFinish', (queue, track) => {

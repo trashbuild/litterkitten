@@ -25,9 +25,11 @@ module.exports = {
           name: `${commands.size} commands available:`,
           value: commands.map(x => `\`/${x.name}\``).join(' | ')
         },
-        { name: 'Source', value: 'https://github.com/trashbuild/litterkitten' }
+        {
+          name: 'Source',
+          value: 'https://github.com/trashbuild/litterkitten'
+        }
       )
-      .setTimestamp()
       .setFooter({
         text: 'Kitten how-to',
         iconURL: interaction.user.displayAvatarURL({ dynamic: true })
