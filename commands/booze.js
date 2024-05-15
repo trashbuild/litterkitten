@@ -3,7 +3,7 @@ const {
   ActionRowBuilder,
   ComponentType,
   EmbedBuilder,
-  SelectMenuBuilder,
+  StringSelectMenuBuilder,
   SlashCommandBuilder
 } = require('discord.js')
 
@@ -47,7 +47,7 @@ async function sendMenu(drinks, interaction) {
 
   // Create menu widget
   const row = new ActionRowBuilder()
-    .addComponents(new SelectMenuBuilder()
+    .addComponents(new StringSelectMenuBuilder()
       .setCustomId('booze')
       .setPlaceholder(`${drinks.length} results for "${interaction.args.join(' ')}"`)
       .addOptions(options)
@@ -61,7 +61,7 @@ async function sendMenu(drinks, interaction) {
 
   // Show recipe based on selection
   const collector = message.createMessageComponentCollector({
-    componentType: ComponentType.SelectMenu
+    componentType: ComponentType.StringSelect
   })
   collector.on('collect', selection => {
     selection.deferUpdate()
