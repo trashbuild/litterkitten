@@ -1,26 +1,31 @@
 // Imports
 const fs = require('node:fs')
 const path = require('node:path')
-const discord = require('discord.js')
+const {
+  Client,
+  Collection,
+  GatewayIntentBits,
+  Partials
+} = require('discord.js')
 
 // Create the actual bot with the things it intends to do
-const client = new discord.Client({
+const client = new Client({
   intents: [
-    discord.GatewayIntentBits.Guilds,
-    discord.GatewayIntentBits.GuildMembers,
-    discord.GatewayIntentBits.GuildMessages,
-    discord.GatewayIntentBits.GuildVoiceStates,
-    discord.GatewayIntentBits.MessageContent
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.MessageContent
   ],
   // Fix failure to read DMs
-  partials: [discord.Partials.Channel]
+  partials: [Partials.Channel]
 })
 
 // Load the config file
 client.config = require('./config.json')
 
 // Load commands from "commands" directory into client.commands
-client.commands = new discord.Collection()
+client.commands = new Collection()
 const commandsPath = path.join(__dirname, 'commands')
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
 for (const file of commandFiles) {
