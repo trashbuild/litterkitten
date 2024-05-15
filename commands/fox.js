@@ -1,8 +1,11 @@
-const discord = require('discord.js')
+const {
+  EmbedBuilder,
+  SlashCommandBuilder
+} = require('discord.js')
 // const sounds = require('../kitten-sounds.js')
 
 module.exports = {
-  data: new discord.SlashCommandBuilder()
+  data: new SlashCommandBuilder()
     .setName('fox')
     .setDescription('???'),
 
@@ -10,7 +13,7 @@ module.exports = {
     await interaction.deferReply()
     const res = await fetch('https://randomfox.ca/floof/')
     const img = (await res.json()).image
-    const embed = new discord.EmbedBuilder()
+    const embed = new EmbedBuilder()
       .setTitle(':fox:')
       .setImage(img)
       .setColor(interaction.client.config.color)
