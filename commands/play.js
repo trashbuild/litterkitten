@@ -9,50 +9,33 @@ module.exports = {
     .addStringOption(option =>
       option.setName('track')
         .setDescription('Track title or url')
-        .setRequired(false)),
+        .setRequired(true)),
 
   async execute(interaction) {
-    // Verify text channel
-    // HACK: hardcoded #bot-spam
-    if (interaction.channel.id !== '416808433493344269') {
+    // Verify action was requested from a voice channel that the user is in
+    const channel = interaction.channel
+    if (!channel.isVoiceBased() | channel !== interaction.member.voice.channel) {
       return interaction.reply({
         content: `${sounds.angy()} :x:`,
         ephemeral: true
       }).catch(e => { console.log(e) })
     }
 
-    // Verify voice channel
-    const channel = interaction.member.voice.channel
-    if (!channel) {
-      return interaction.reply({
-        content: `${sounds.angy()} :x:`,
-        ephemeral: true
-      }).catch(e => { console.log(e) })
-    }
-
-    // If no args given, just try to resume playback
-    const player = useMainPlayer()
-    if (interaction.args.length === 0) {
-      if (player && !player.playing) {
-        await player.play()
-        return interaction.reply({
-          content: `${sounds.confused()} :floppy_disc:`,
-          ephemeral: true
-        }).catch(e => { console.log(e) })
-      }
-    }
+    // If no args given, just try to unpause
+    // TODO
 
     // Send "working" message
     await interaction.deferReply({ ephemeral: true })
       .catch(e => { console.log(e) })
 
-    // If args given, search for those terms
+    // Search for given terms
+    const player = useMainPlayer()
     const searchResult = await player.search(
       interaction.args.join(' '),
       { requestedBy: interaction.member }
     )
 
-    // Verify search result
+    // Verify result
     if (!searchResult || !searchResult.hasTracks()) {
       return interaction.editReply({
         content: `${sounds.no()} :weary:`
@@ -63,7 +46,6 @@ module.exports = {
     // Play music
     await player.play(channel, searchResult, {
       nodeOptions: {
-        metadata: interaction.channel,
         volume: 5,
         leaveOnEmpty: true,
         leaveOnEmptyCooldown: 300000,

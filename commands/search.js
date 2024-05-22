@@ -45,8 +45,7 @@ module.exports = {
     // // Get queue
     // const queue = await player.createQueue(interaction.guild, {
     //   leaveOnEnd: true,
-    //   autoSelfDeaf: true,
-    //   metadata: interaction.channel
+    //   autoSelfDeaf: true
     // })
 
     // Create embed

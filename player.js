@@ -7,6 +7,33 @@ const {
 } = require('discord.js')
 const { Player } = require('discord-player')
 
+function qlog(msg, queue, logFunc = console.log) {
+  // Log message in console with the guild it came from
+  logFunc(`${queue.guild.name}: ${msg}`)
+}
+
+function statusIdle(client) {
+  // Set bot status to idle
+  // TODO: verify no queues playing
+  client.user.setPresence({
+    activities: [{
+      name: 'a bug',
+      type: ActivityType.Watching
+    }]
+  })
+}
+
+function statusListening(client, track) {
+  // Set bot status according to music
+  client.user.setPresence({
+    activities: [{
+      name: track.title,
+      type: ActivityType.Listening,
+      url: track.url
+    }]
+  })
+}
+
 function initPlayer(client) {
   // Build the music player
   const player = Player.singleton(client)
@@ -14,104 +41,89 @@ function initPlayer(client) {
 
   // Event handling
   player.on('audioTrackAdd', (queue, track) => {
-    queue.metadata.send({
+    queue.channel.send({
       content: `:white_check_mark: ${track.title}`
-    }).catch(e => { console.log(e) })
-    console.log(`Added: ${track.title}`)
+    }).catch(e => { qlog(e, queue) })
+    qlog(`Added ${track.title}`, queue)
   })
 
   player.on('audioTracksAdd', (queue, tracks) => {
-    queue.metadata.send({
+    queue.channel.send({
       content: `:white_check_mark: ${tracks.length} :music_note:`
-    }).catch(e => { console.log(e) })
-    console.log(`Added: ${tracks.length} tracks`)
+    }).catch(e => { qlog(e, queue) })
+    qlog(`Added ${tracks.length} tracks`, queue)
   })
 
   player.on('audioTrackRemove', (queue, track) => {
-    queue.metadata.send({
+    queue.channel.send({
       content: `:x: ${track.title}`
-    }).catch(e => { console.log(e) })
-    console.log(`Removed: ${track.title}`)
+    }).catch(e => { qlog(e, queue) })
+    qlog(`Removed ${track.title}`, queue)
   })
 
   player.on('audioTracksRemove', (queue, tracks) => {
-    queue.metadata.send({
+    queue.channel.send({
       content: `:x: ${tracks.length} :music_note:`
-    }).catch(e => { console.log(e) })
-    console.log(`Removed: ${tracks.length} tracks`)
+    }).catch(e => { qlog(e, queue) })
+    qlog(`Removed ${tracks.length} tracks`, queue)
   })
 
   player.events.on('connection', (queue) => {
-    console.log('Player connected!')
+    statusIdle(client)
+    qlog('Player connected!', queue)
   })
 
   // player.events.on('debug', (queue, message) => {
-  //   console.log('\n', message)
+  //   qlog(message, queue)
   // })
 
   player.events.on('disconnect', (queue) => {
-    client.user.setPresence({
-      activities: [{
-        name: 'a bug',
-        type: ActivityType.Watching
-      }]
-    })
-    console.log('Player disconnected.')
+    statusIdle(client)
+    qlog('Player disconnected.', queue)
   })
 
   player.events.on('emptyChannel', (queue) => {
-    console.log('Voice channel empty.')
+    qlog('Voice channel empty.', queue)
   })
 
   player.events.on('emptyQueue', (queue) => {
-    client.user.setPresence({
-      activities: [{
-        name: 'you, unblinkingly',
-        type: ActivityType.Watching
-      }]
-    })
-    console.log('Queue empty.')
+    statusIdle(client)
+    qlog('Queue empty.', queue)
   })
 
   player.events.on('error', (queue, error) => {
-    console.error('Error:', error.message, 'with track', error.resource.metadata.title)
+    qlog(`Error: ${error.message}, Track: ${error.resource.metadata.title}`, queue, console.error)
   })
 
   player.events.on('playerError', (queue, error, track) => {
-    console.error('playerError:', error.message, 'with track', track.title)
+    qlog(`playerError: ${error.message}, Track: ${track.title}`, queue, console.error)
   })
 
   player.events.on('playerFinish', (queue, track) => {
-    console.log(`Finished track: ${track.title}`)
+    qlog(`Finished track: ${track.title}`, queue)
   })
 
   player.events.on('playerSkip', (queue, track) => {
-    console.log(`Skipped track: ${track.title}`)
+    qlog(`Skipped track: ${track.title}`, queue)
   })
 
   player.events.on('playerStart', (queue, track) => {
     // Report track start
-    queue.metadata.send({
+    queue.channel.send({
       content: `:musical_note: ${track.title}`,
       ephemeral: 'true'
-    }).catch(e => { console.log(e) })
+    }).catch(e => { qlog(e, queue) })
     // Set bot activity
-    client.user.setPresence({
-      activities: [{
-        name: track.title,
-        type: ActivityType.Listening,
-        url: track.url
-      }]
-    })
-    console.log(`Playing: ${track.title}`)
+    statusListening(client, track)
+    qlog(`Playing: ${track.title}`, queue)
   })
 
   // player.events.on('playerTrigger', (queue, track, reason) => {
-  //   console.log(`Player triggered! Track: ${track.title}, Reason: ${reason}`)
+  //   qlog(`Player triggered! Track: ${track.title}, Reason: ${reason}`, queue)
   // })
 
   // player.events.on('voiceStateUpdate', (queue, oldState, newState) => {
-  //   console.log(`voiceStateUpdate: oldState ${oldState}, newState ${newState}`)
+  //   qlog(`voiceStateUpdate: oldState ${oldState}, newState ${newState}`, queue)
   // })
 }
 
@@ -198,7 +210,7 @@ function handleButton(interaction) {
     // Test button
     case 'cool':
       // TODO: airhorn?
-      console.log('cool')
+      qlog('cool', queue)
       break
     // DM current track to user
     case 'saveTrack': {
@@ -215,7 +227,7 @@ function handleButton(interaction) {
           { name: 'Heard in', value: `\`${interaction.guild.name}\`` }
         ).setTimestamp()
       interaction.member.send({ embeds: [embed] })
-        .catch(e => { console.log(e) })
+        .catch(e => { qlog(e, queue) })
       break
     }
     case 'time': {
@@ -224,7 +236,7 @@ function handleButton(interaction) {
       const timestamp = queue.getPlayerTimestamp()
       if (timestamp.progress === 'Infinity') {
         return interaction.message.edit({ content: ':infinity:' })
-          .catch(e => { console.log(e) })
+          .catch(e => { qlog(e, queue) })
       }
 
       const client = interaction.client
@@ -236,11 +248,11 @@ function handleButton(interaction) {
         .setTimestamp()
         .setDescription(`${progress} (**${timestamp.progress}**%)`)
       interaction.message.edit({ embeds: [embed] })
-        .catch(e => console.log(e))
+        .catch(e => qlog(e, queue))
       break
     }
     default:
-      console.log(interaction.customId)
+      qlog(interaction.customId, queue)
   }
 }
 
