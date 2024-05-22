@@ -28,8 +28,6 @@ module.exports = {
     const timestamp = queue.getPlayerTimestamp()
     const embed = new EmbedBuilder()
       .setColor(interaction.guild.members.me.displayHexColor)
-      .setThumbnail(track.thumbnail)
-      .setTitle(track.title)
       .setDescription(
         `:speaker: %${queue.volume}
         :timer: ${timestamp.progress === 'Forever'
@@ -37,7 +35,9 @@ module.exports = {
           : track.duration}
         :link: [direct link](${track.url})
         :question: ${track.requestedBy}`)
+      .setThumbnail(track.thumbnail)
       .setTimestamp()
+      .setTitle(track.title)
 
     // Create save button
     const saveButton = new ButtonBuilder()

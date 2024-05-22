@@ -36,13 +36,13 @@ module.exports = {
     const nextSongs = n > 5 ? `+ **${n - 5}**` : `**${n}**`
     const embed = new EmbedBuilder()
       .setColor(interaction.guild.members.me.displayHexColor)
-      .setThumbnail(queue.currentTrack.thumbnail)
-      .setTitle('Playlist')
       .setDescription(
         `Currently Playing: \`${queue.currentTrack.title}\`\n
         ${tracks.slice(0, 5).join('\n')}\n\n${nextSongs}`
       )
+      .setThumbnail(queue.currentTrack.thumbnail)
       .setTimestamp()
+      .setTitle('Playlist')
 
     // Reply
     interaction.reply({ embeds: [embed] })

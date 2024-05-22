@@ -144,17 +144,17 @@ function buildEmbed(interaction) {
   // Track info embed
   const embed = new EmbedBuilder()
     .setColor(interaction.guild.members.me.displayHexColor)
+    .setDescription('Test embed!')
+    .setFooter({ text: 'Footer text!' }) //, iconURL: 'test' })
+    .setTimestamp()
     .setTitle('Music player')
     .setURL('https://github.com/trashbuild/litterkitten')
     // .setAuthor({ name: 'test', iconURL: ''})
-    .setDescription('Test embed!')
     // .setThumbnail('test.png')
     .addFields(
       { name: 'test', value: 'test' }
     )
     // .setImage('test')
-    .setTimestamp()
-    .setFooter({ text: 'Footer text!' }) //, iconURL: 'test' })
   return embed
 }
 
@@ -217,14 +217,15 @@ function handleButton(interaction) {
       const client = interaction.client
       const embed = new EmbedBuilder()
         .setColor(client.config.color)
-        .setTitle('Saved track')
         .setThumbnail(client.user.displayAvatarURL())
+        .setTimestamp()
+        .setTitle('Saved track')
         .addFields(
           { name: 'Track', value: `\`${queue.current.title}\`` },
           { name: 'Duration', value: `\`${queue.current.duration}\`` },
           { name: 'URL', value: `${queue.current.url}` },
           { name: 'Heard in', value: `\`${interaction.guild.name}\`` }
-        ).setTimestamp()
+        )
       interaction.member.send({ embeds: [embed] })
         .catch(e => { qlog(e, queue) })
       break
@@ -242,9 +243,9 @@ function handleButton(interaction) {
       const progress = queue.createProgressBar()
       const embed = new EmbedBuilder()
         .setColor(client.config.color)
-        .setTitle(queue.current.title)
         .setThumbnail(client.user.displayAvatarURL())
         .setTimestamp()
+        .setTitle(queue.current.title)
         .setDescription(`${progress} (**${timestamp.progress}**%)`)
       interaction.message.edit({ embeds: [embed] })
         .catch(e => qlog(e, queue))

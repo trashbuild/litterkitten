@@ -20,8 +20,9 @@ async function sendRecipe(drink, interaction) {
 
   // Create embed
   const embed = new EmbedBuilder()
-    .setTitle(drink.strDrink ?? 'Mystery drink!')
+    .setColor(interaction.guild.members.me.displayHexColor)
     .setThumbnail(`${drink.strDrinkThumb}/preview`)
+    .setTitle(drink.strDrink ?? 'Mystery drink!')
     .addFields(
       { name: 'Category', value: drink.strCategory ?? 'None' },
       { name: 'IBA', value: drink.strIBA ?? 'None' },

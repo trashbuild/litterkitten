@@ -56,15 +56,16 @@ module.exports = {
           } else {
             const embed = new EmbedBuilder()
               .setColor(interaction.guild.members.me.displayHexColor)
-              .setTitle('Saved track')
               .setThumbnail(client.user.displayAvatarURL())
+              .setTimestamp()
+              .setTitle('Saved track')
               .addFields(
                 { name: 'Track', value: `\`${player.current.title}\`` },
                 { name: 'Duration', value: `\`${player.current.duration}\`` },
                 { name: 'URL', value: `${player.current.url}` },
                 { name: 'Saved Server', value: `\`${interaction.guild.name}\`` },
                 { name: 'Requested By', value: `${player.current.requestedBy}` }
-              ).setTimestamp()
+              )
             interaction.member.send({ embeds: [embed] }).then(() => {
               return interaction.reply({
                 content: `${sounds.yes()} :white_check_mark:`,
@@ -98,10 +99,10 @@ module.exports = {
 
             const embed = new EmbedBuilder()
               .setColor(interaction.guild.members.me.displayHexColor)
-              .setTitle(player.current.title)
+              .setDescription(`${progress} (**${timestamp.progress}**%)`)
               .setThumbnail(client.user.displayAvatarURL())
               .setTimestamp()
-              .setDescription(`${progress} (**${timestamp.progress}**%)`)
+              .setTitle(player.current.title)
             interaction.message.edit({ embeds: [embed] }).catch(e => { })
           }
         }

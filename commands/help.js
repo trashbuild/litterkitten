@@ -16,10 +16,14 @@ module.exports = {
     // Create embed
     const embed = new EmbedBuilder()
       .setColor(interaction.guild.members.me.displayHexColor)
-      .setTitle(client.user.username)
-      .setThumbnail(client.user.displayAvatarURL())
       .setDescription('"It hath an head like a swine, and a tail like a rat,' +
         ' and is of the bigness of a cat."')
+      .setFooter({
+        text: 'Kitten how-to',
+        iconURL: interaction.user.displayAvatarURL({ dynamic: true })
+      })
+      .setThumbnail(client.user.displayAvatarURL())
+      .setTitle(client.user.username)
       .addFields(
         {
           name: `${commands.size} commands available:`,
@@ -30,10 +34,6 @@ module.exports = {
           value: 'https://github.com/trashbuild/litterkitten'
         }
       )
-      .setFooter({
-        text: 'Kitten how-to',
-        iconURL: interaction.user.displayAvatarURL({ dynamic: true })
-      })
 
     // Send reply
     interaction.reply({ embeds: [embed] })

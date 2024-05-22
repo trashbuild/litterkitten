@@ -51,12 +51,13 @@ module.exports = {
     const maxTracks = searchResult.tracks.slice(0, 10)
     const embed = new EmbedBuilder()
       .setColor(interaction.guild.members.me.displayHexColor)
-      .setTitle(name)
       .setDescription(
         `${maxTracks.map(
           (track, i) => `**${i + 1}**. ${track.title} | \`${track.author}\``)
           .join('\n')}\n\n :hash::grey_question:`
-      ).setTimestamp()
+      )
+      .setTimestamp()
+      .setTitle(name)
 
     // Reply
     interaction.editReply({ embeds: [embed] })

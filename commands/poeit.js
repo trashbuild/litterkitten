@@ -35,8 +35,9 @@ async function handlePoem(interaction) {
     .then((data) => {
       // Create embed from response data
       const embed = new EmbedBuilder()
-        .setTitle('🤓')
+        .setColor(interaction.guild.members.me.displayHexColor)
         .setDescription(poem)
+        .setTitle('🤓')
         .addFields(
           { name: 'Form', value: data.form, inline: true },
           { name: 'Meter', value: data.meter, inline: true },
