@@ -27,7 +27,9 @@ rest.put(Routes.applicationGuildCommands(clientId, superGuildId), { body: [] })
   .catch(console.error)
 
 // Register guild commands
-rest.put(Routes.applicationGuildCommands(clientId, superGuildId), { body: commands })
+rest.put(Routes.applicationGuildCommands(clientId, superGuildId), {
+  body: commands.filter(cmd => config.superCommands.includes(cmd.name))
+})
   .then((data) => console.log(`Successfully registered ${data.length} guild commands.`))
   .catch(console.error)
 
