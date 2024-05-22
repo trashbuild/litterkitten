@@ -24,11 +24,10 @@ module.exports = {
     }
 
     // Create embed
-    const client = interaction.client
     const track = queue.currentTrack
     const timestamp = queue.getPlayerTimestamp()
     const embed = new EmbedBuilder()
-      .setColor(client.config.color)
+      .setColor(interaction.guild.members.me.displayHexColor)
       .setThumbnail(track.thumbnail)
       .setTitle(track.title)
       .setDescription(

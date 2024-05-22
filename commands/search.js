@@ -16,7 +16,6 @@ module.exports = {
 
   async execute(interaction) {
     await interaction.deferReply()
-    const client = interaction.client
 
     // Get search terms
     if (interaction.args.length < 1) {
@@ -51,7 +50,7 @@ module.exports = {
     // Create embed
     const maxTracks = searchResult.tracks.slice(0, 10)
     const embed = new EmbedBuilder()
-      .setColor(client.config.color)
+      .setColor(interaction.guild.members.me.displayHexColor)
       .setTitle(name)
       .setDescription(
         `${maxTracks.map(

@@ -141,10 +141,9 @@ function makeRow(row) {
 }
 
 function buildEmbed(interaction) {
-  const client = interaction.client
   // Track info embed
   const embed = new EmbedBuilder()
-    .setColor(client.config.color)
+    .setColor(interaction.guild.members.me.displayHexColor)
     .setTitle('Music player')
     .setURL('https://github.com/trashbuild/litterkitten')
     // .setAuthor({ name: 'test', iconURL: ''})

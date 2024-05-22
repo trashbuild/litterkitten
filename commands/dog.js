@@ -14,9 +14,9 @@ module.exports = {
     const res = await fetch('https://dog.ceo/api/breeds/image/random')
     const img = (await res.json()).message
     const embed = new EmbedBuilder()
-      .setTitle(':dog:')
+      .setColor(interaction.guild.members.me.displayHexColor)
       .setImage(img)
-      .setColor(interaction.client.config.color)
+      .setTitle(':dog:')
     interaction.editReply({ embeds: [embed] })
   }
 }

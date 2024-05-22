@@ -14,9 +14,9 @@ module.exports = {
     const res = await fetch('https://randomfox.ca/floof/')
     const img = (await res.json()).image
     const embed = new EmbedBuilder()
-      .setTitle(':fox:')
+      .setColor(interaction.guild.members.me.displayHexColor)
       .setImage(img)
-      .setColor(interaction.client.config.color)
+      .setTitle(':fox:')
     interaction.editReply({ embeds: [embed] })
   }
 }

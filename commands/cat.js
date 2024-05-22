@@ -16,9 +16,9 @@ module.exports = {
     })
     const image = (await res.json())[0].url
     const embed = new EmbedBuilder()
-      .setTitle(':cat:')
+      .setColor(interaction.guild.members.me.displayHexColor)
       .setImage(image)
-      .setColor(interaction.client.config.color)
+      .setTitle(':cat:')
     interaction.editReply({ embeds: [embed] })
   }
 }

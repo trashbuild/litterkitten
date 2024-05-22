@@ -15,7 +15,7 @@ module.exports = {
 
     // Create embed
     const embed = new EmbedBuilder()
-      .setColor(client.config.color)
+      .setColor(interaction.guild.members.me.displayHexColor)
       .setTitle(client.user.username)
       .setThumbnail(client.user.displayAvatarURL())
       .setDescription('"It hath an head like a swine, and a tail like a rat,' +

@@ -12,9 +12,7 @@ module.exports = {
 
   async execute(interaction) {
     // Get queue
-    const client = interaction.client
-    const player = useMainPlayer()
-    const queue = player.nodes.get(interaction.guild.id)
+    const queue = useMainPlayer().nodes.get(interaction.guild.id)
     if (!queue || !queue.node.isPlaying()) {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
@@ -37,7 +35,7 @@ module.exports = {
     const n = queue.tracks.size
     const nextSongs = n > 5 ? `+ **${n - 5}**` : `**${n}**`
     const embed = new EmbedBuilder()
-      .setColor(client.config.color)
+      .setColor(interaction.guild.members.me.displayHexColor)
       .setThumbnail(queue.currentTrack.thumbnail)
       .setTitle('Playlist')
       .setDescription(

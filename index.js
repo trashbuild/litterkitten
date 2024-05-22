@@ -21,9 +21,6 @@ const client = new Client({
   partials: [Partials.Channel]
 })
 
-// Load the config file
-client.config = require('./config.json')
-
 // Load commands from "commands" directory into client.commands
 client.commands = new Collection()
 const commandsPath = path.join(__dirname, 'commands')
@@ -53,4 +50,4 @@ for (const file of eventFiles) {
 require('./player.js').initPlayer(client)
 
 // Login!
-client.login(client.config.token)
+client.login(require('./config.json').token)

@@ -55,7 +55,7 @@ module.exports = {
             })
           } else {
             const embed = new EmbedBuilder()
-              .setColor(client.config.color)
+              .setColor(interaction.guild.members.me.displayHexColor)
               .setTitle('Saved track')
               .setThumbnail(client.user.displayAvatarURL())
               .addFields(
@@ -97,7 +97,7 @@ module.exports = {
             }
 
             const embed = new EmbedBuilder()
-              .setColor(client.config.color)
+              .setColor(interaction.guild.members.me.displayHexColor)
               .setTitle(player.current.title)
               .setThumbnail(client.user.displayAvatarURL())
               .setTimestamp()
