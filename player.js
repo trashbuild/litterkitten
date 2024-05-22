@@ -83,6 +83,7 @@ function initPlayer(client) {
   })
 
   player.events.on('emptyChannel', (queue) => {
+    statusIdle(client)
     qlog('Voice channel empty.', queue)
   })
 
