@@ -49,9 +49,8 @@ for (const file of eventFiles) {
   }
 }
 
-// Create player
-const player = require('./player.js')
-player.initPlayer(client)
+// Create music player from player.js file
+require('./player.js').initPlayer(client)
 
 // Login!
 client.login(client.config.token)
