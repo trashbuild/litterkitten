@@ -9,9 +9,8 @@ module.exports = {
 
   async execute(interaction) {
     // Get queue
-    const player = useMainPlayer()
-    const queue = player.nodes.get(interaction.guild.id)
-    if (!queue || !queue.node.isPlaying()) {
+    const node = useMainPlayer().nodes.get(interaction.guild.id).node
+    if (!node || !node.isPlaying()) {
       return interaction.reply({
         content: `${sounds.confused()} :mute:`,
         ephemeral: true
@@ -19,7 +18,7 @@ module.exports = {
     }
 
     // Try to skip current song
-    const success = queue.node.skip()
+    const success = node.skip()
 
     // Return whether it worked or not
     return interaction.reply({
