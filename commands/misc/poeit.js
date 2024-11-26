@@ -6,7 +6,7 @@ const {
   TextInputBuilder,
   TextInputStyle
 } = require('discord.js')
-const sounds = require('../kitten-sounds.js')
+const sounds = require('../../kitten-sounds.js')
 
 async function handlePoem(interaction) {
   await interaction.deferReply()

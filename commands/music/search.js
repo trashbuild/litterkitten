@@ -1,4 +1,4 @@
-const sounds = require('../kitten-sounds.js')
+const sounds = require('../../kitten-sounds.js')
 const { QueryType, useMainPlayer } = require('discord-player')
 const {
   EmbedBuilder,

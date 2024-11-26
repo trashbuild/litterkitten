@@ -1,4 +1,4 @@
-const sounds = require('../kitten-sounds.js')
+const sounds = require('../../kitten-sounds.js')
 const { SlashCommandBuilder } = require('discord.js')
 const { useMainPlayer } = require('discord-player')
 

@@ -2,7 +2,6 @@ const {
   EmbedBuilder,
   SlashCommandBuilder
 } = require('discord.js')
-// const sounds = require('../kitten-sounds.js')
 
 module.exports = {
   data: new SlashCommandBuilder()

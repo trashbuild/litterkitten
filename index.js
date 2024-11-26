@@ -23,13 +23,17 @@ const client = new Client({
 
 // Load commands from "commands" directory into client.commands
 client.commands = new Collection()
-const commandsPath = path.join(__dirname, 'commands')
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
-for (const file of commandFiles) {
-  const filePath = path.join(commandsPath, file)
-  const command = require(filePath)
-  const commandName = file.split('.')[0]
-  client.commands.set(commandName, command)
+const foldersPath = path.join(__dirname, 'commands')
+const commandFolders = fs.readdirSync(foldersPath)
+for (const folder of commandFolders) {
+  const commandsPath = path.join(foldersPath, folder)
+  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
+  for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file)
+    const command = require(filePath)
+    const commandName = file.split('.')[0]
+    client.commands.set(commandName, command)
+  }
 }
 
 // Load events from "events" directory
