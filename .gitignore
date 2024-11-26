@@ -1,5 +1,6 @@
 .env
-package-lock.json
 config.json
+package-lock.json
+music/*
 node_modules
 notes
