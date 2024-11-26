@@ -1,46 +1,47 @@
-const config = require('./config.json')
+const { REST, Routes } = require('discord.js')
+const { clientId, guildId, token } = require('./config.json')
 const fs = require('node:fs')
 const path = require('node:path')
-const {
-  REST,
-  Routes
-} = require('discord.js')
 
-// Load commands to register
 const commands = []
-const commandsPath = path.join(__dirname, 'commands')
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
-for (const file of commandFiles) {
-  const filePath = path.join(commandsPath, file)
-  const command = require(filePath)
-  commands.push(command.data.toJSON())
+// Grab all the command folders from the commands directory
+const foldersPath = path.join(__dirname, 'commands')
+const commandFolders = fs.readdirSync(foldersPath)
+
+for (const folder of commandFolders) {
+  // Grab all the command files from each directory
+  const commandsPath = path.join(foldersPath, folder)
+  const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'))
+  // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
+  for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file)
+    const command = require(filePath)
+    if ('data' in command && 'execute' in command) {
+      commands.push(command.data.toJSON())
+    } else {
+      console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`)
+    }
+  }
 }
 
-// Communicate with Discord
-const rest = new REST({ version: '10' }).setToken(config.token)
+// Construct and prepare an instance of the REST module
+const rest = new REST().setToken(token);
 
-// Delete guild-based commands
-const clientId = config.clientId
-const superGuildId = config.superGuildId
-rest.put(Routes.applicationGuildCommands(clientId, superGuildId), { body: [] })
-  .then(() => console.log('Successfully deleted all guild commands.'))
-  .catch(console.error)
+// and deploy your commands!
+(async () => {
+  try {
+    console.log(`Started refreshing ${commands.length} application (/) commands.`)
 
-// Register guild commands
-rest.put(Routes.applicationGuildCommands(clientId, superGuildId), {
-  body: commands.filter(cmd => config.superCommands.includes(cmd.name))
-})
-  .then((data) => console.log(`Successfully registered ${data.length} guild commands.`))
-  .catch(console.error)
+    // The put method is used to fully refresh all commands in the guild with the current set
+    const data = await rest.put(
+      // Routes.applicationGuildCommands(clientId, guildId),
+      Routes.applicationCommands(clientId),
+      { body: commands }
+    )
 
-// Delete global commands
-rest.put(Routes.applicationCommands(clientId), { body: [] })
-  .then(() => console.log('Successfully deleted all application commands.'))
-  .catch(console.error)
-
-// Register global commands
-rest.put(Routes.applicationCommands(clientId), {
-  body: commands.filter(cmd => !config.superCommands.includes(cmd.name))
-})
-  .then((data) => console.log(`Successfully registered ${data.length} application commands.`))
-  .catch(console.error)
+    console.log(`Successfully reloaded ${data.length} application (/) commands.`)
+  } catch (error) {
+    // And of course, make sure you catch and log any errors!
+    console.error(error)
+  }
+})()
