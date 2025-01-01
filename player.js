@@ -6,6 +6,9 @@ const {
   EmbedBuilder
 } = require('discord.js')
 const { Player } = require('discord-player')
+const { DefaultExtractors } = require('@discord-player/extractor')
+const { default: TidalExtractor } = require("discord-player-tidal")
+const { YoutubeiExtractor } = require('discord-player-youtubei')
 
 function qlog(msg, queue, logFunc = console.log) {
   // Log message in console with the guild it came from
@@ -36,8 +39,10 @@ function statusListening(client, track) {
 
 function initPlayer(client) {
   // Build the music player
-  const player = Player.singleton(client)
-  player.extractors.loadDefault()
+  const player = new Player(client)
+  player.extractors.loadMulti(DefaultExtractors)
+  player.extractors.register(TidalExtractor)
+  player.extractors.register(YoutubeiExtractor)
 
   // Event handling
   player.on('audioTrackAdd', (queue, track) => {
@@ -155,7 +160,7 @@ function buildEmbed(interaction) {
     .addFields(
       { name: 'test', value: 'test' }
     )
-    // .setImage('test')
+  // .setImage('test')
   return embed
 }
 

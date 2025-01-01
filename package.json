@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@discord-player/extractor": "^7.0.0",
     "discord-player": "^7.0.0",
     "discord-player-tidal": "^0.1.0",
     "discord-player-youtubei": "^1.3.7",
